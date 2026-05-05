@@ -205,26 +205,70 @@
     .spinner-lbl { font-size:11px; color:var(--text3); }
     @keyframes spin { to { transform:rotate(360deg); } }
 
-    /* ── Planner tab: ferramentas home ── */
-    .planner-home { overflow-y:auto; height:100%; padding:44px 48px; }
-    .ph-heading { font-size:20px; font-weight:800; color:var(--text); margin-bottom:6px; }
-    .ph-sub { font-size:12px; color:var(--text3); margin-bottom:36px; }
-    .ph-section { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
-    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-bottom:40px; }
-    .pcard {
-      background:var(--bg2); border:1px solid var(--border);
-      border-radius:16px; padding:22px 20px 18px;
-      cursor:pointer; display:flex; flex-direction:column; gap:10px;
-      transition:box-shadow .15s, transform .15s, border-color .15s;
-      text-decoration:none;
+    /* ── Ferramentas na sidebar ── */
+    .sb-tool-btn {
+      display:flex; align-items:center; gap:10px;
+      width:100%; padding:9px 10px; border-radius:10px;
+      border:1px solid var(--border); background:var(--bg2);
+      font-family:'Lufga',sans-serif; font-size:12px; font-weight:600;
+      color:var(--text2); cursor:pointer; margin-bottom:6px;
+      transition:background .12s, border-color .12s, color .12s;
+      text-align:left;
     }
-    .pcard:hover { box-shadow:0 8px 28px rgba(42,26,16,.10); transform:translateY(-2px); border-color:rgba(192,83,58,.25); }
-    .pcard:active { transform:none; }
-    .pcard-head { display:flex; align-items:center; gap:10px; }
-    .pcard-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-    .pcard-name { font-size:14px; font-weight:700; color:var(--text); }
-    .pcard-desc { font-size:11px; color:var(--text3); line-height:1.6; }
-    .pcard-cta  { font-size:10px; font-weight:700; color:var(--accent); margin-top:auto; }
+    .sb-tool-btn:hover { background:var(--bg); border-color:rgba(192,83,58,.3); color:var(--accent); }
+    .sb-tool-btn.active { background:rgba(192,83,58,.10); border-color:rgba(192,83,58,.3); color:var(--accent); }
+    .sb-tool-icon { font-size:15px; flex-shrink:0; }
+    .sb-tool-name { flex:1; }
+    .sb-tool-arr { font-size:10px; color:var(--text3); }
+
+    /* ── Planner home — estilo centrais ── */
+    .planner-home { overflow-y:auto; height:100%; padding:36px 40px 60px; background:var(--bg); }
+
+    .ph-date {
+      font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+      color:var(--text3); margin-bottom:4px;
+    }
+    .ph-heading { font-size:22px; font-weight:800; color:var(--text); margin-bottom:28px; }
+
+    /* KPI row */
+    .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:28px; }
+    .kpi-card {
+      background:#fff; border-radius:16px; padding:20px 22px;
+      box-shadow:0 2px 12px rgba(42,26,16,.07);
+      border:1.5px solid var(--border);
+      position:relative; overflow:hidden;
+    }
+    .kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; }
+    .kpi-card.k-terra::before  { background:var(--accent); }
+    .kpi-card.k-green::before  { background:#5C8C5C; }
+    .kpi-card.k-amber::before  { background:#C4962C; }
+    .kpi-card.k-blue::before   { background:#3A7BD5; }
+    .kpi-label { font-size:10px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+    .kpi-value { font-size:28px; font-weight:800; color:var(--text); line-height:1.1; margin-bottom:3px; }
+    .kpi-value.kv-terra { color:var(--accent); }
+    .kpi-value.kv-green { color:#5C8C5C; }
+    .kpi-value.kv-amber { color:#A07820; }
+    .kpi-value.kv-blue  { color:#3A7BD5; }
+    .kpi-sub  { font-size:11px; color:var(--text3); font-weight:500; }
+    .kpi-icon { position:absolute; top:18px; right:18px; font-size:26px; opacity:.14; }
+
+    /* Content cards */
+    .content-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .cc {
+      background:#fff; border-radius:16px; padding:22px 22px 18px;
+      box-shadow:0 2px 12px rgba(42,26,16,.07);
+      border:1.5px solid var(--border);
+    }
+    .cc-title {
+      font-size:13px; font-weight:800; color:var(--text);
+      margin-bottom:14px; display:flex; align-items:center; gap:8px;
+    }
+    .cc-title-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .cc-item { padding:8px 10px; border-radius:9px; background:var(--bg2); border:1px solid var(--border); margin-bottom:6px; }
+    .cc-brand { font-size:9px; font-weight:800; letter-spacing:.8px; color:var(--accent); }
+    .cc-name  { font-size:11px; color:var(--text); margin-top:2px; line-height:1.35;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .cc-empty { font-size:11px; color:var(--text3); font-style:italic; }
 
     /* tool iframe overlay */
     .tool-overlay {
@@ -342,6 +386,20 @@
         <div id="tarefas-list"><div class="cu-loading">Aguardando ClickUp…</div></div>
       </div>
 
+      <!-- Ferramentas -->
+      <div class="sb-section">
+        <div class="sb-label">Ferramentas</div>
+        <button class="sb-tool-btn" onclick="openTool('maquina','Máquina de Conteúdos','https://maquinadeconteudos47.netlify.app')" id="tool-btn-maquina">
+          <span class="sb-tool-icon">⚙️</span><span class="sb-tool-name">Máquina de Conteúdos</span><span class="sb-tool-arr">→</span>
+        </button>
+        <button class="sb-tool-btn" onclick="openTool('financas','Finanças','https://financas-welove.netlify.app')" id="tool-btn-financas">
+          <span class="sb-tool-icon">💚</span><span class="sb-tool-name">Finanças</span><span class="sb-tool-arr">→</span>
+        </button>
+        <button class="sb-tool-btn" onclick="openTool('senhas','Senhas & APIs','/apis.html')" id="tool-btn-senhas">
+          <span class="sb-tool-icon">🔑</span><span class="sb-tool-name">Senhas & APIs</span><span class="sb-tool-arr">→</span>
+        </button>
+      </div>
+
       <!-- Footer -->
       <div class="sb-footer">
         <span class="cu-status-txt" id="cu-status">ClickUp não conectado</span>
@@ -353,37 +411,60 @@
     <!-- ─── MAIN ──────────────────────────────────────────── -->
     <div id="main">
 
-      <!-- PLANNER: ferramentas + calendário -->
+      <!-- PLANNER: home dashboard -->
       <div class="panel active" id="panel-planner">
         <div class="planner-home" id="ph-home">
-          <div class="ph-heading">Ferramentas</div>
-          <div class="ph-sub">Acesse suas ferramentas ou abra uma marca para começar</div>
+          <div class="ph-date" id="ph-date"></div>
+          <div class="ph-heading" id="ph-heading">Bom dia, Laise</div>
 
-          <div class="ph-section">Produção de Conteúdo</div>
-          <div class="card-grid">
-            <div class="pcard" onclick="openTool('maquina','Máquina de Conteúdos','https://maquinadeconteudos47.netlify.app')">
-              <div class="pcard-head"><span class="pcard-dot" style="background:#3A7BD5"></span><span class="pcard-name">Máquina de Conteúdos</span></div>
-              <div class="pcard-desc">Pipeline semanal Sistema 1×10 · gestão cross-canal de produção</div>
-              <div class="pcard-cta">Abrir →</div>
+          <!-- KPI row -->
+          <div class="kpi-row">
+            <div class="kpi-card k-terra">
+              <div class="kpi-label">Focos do Dia</div>
+              <div class="kpi-value kv-terra" id="kpi-focos">0 / 3</div>
+              <div class="kpi-sub">concluídos hoje</div>
+              <div class="kpi-icon">🎯</div>
+            </div>
+            <div class="kpi-card k-green">
+              <div class="kpi-label">Rotinas</div>
+              <div class="kpi-value kv-green" id="kpi-rotinas">0 / 5</div>
+              <div class="kpi-sub">hábitos do dia</div>
+              <div class="kpi-icon">🌿</div>
+            </div>
+            <div class="kpi-card k-amber">
+              <div class="kpi-label">Aprovações</div>
+              <div class="kpi-value kv-amber" id="kpi-aprv">—</div>
+              <div class="kpi-sub">pendentes no ClickUp</div>
+              <div class="kpi-icon">✅</div>
+            </div>
+            <div class="kpi-card k-blue">
+              <div class="kpi-label">Tarefas Hoje</div>
+              <div class="kpi-value kv-blue" id="kpi-tarefas">—</div>
+              <div class="kpi-sub">com prazo para hoje</div>
+              <div class="kpi-icon">📋</div>
             </div>
           </div>
 
-          <div class="ph-section">Pessoal</div>
-          <div class="card-grid">
-            <div class="pcard" onclick="openTool('financas','Finanças','https://financas-welove.netlify.app')">
-              <div class="pcard-head"><span class="pcard-dot" style="background:#5C8C5C"></span><span class="pcard-name">Finanças</span></div>
-              <div class="pcard-desc">Dashboard financeiro pessoal · receitas · despesas · metas</div>
-              <div class="pcard-cta">Abrir →</div>
+          <!-- Content cards -->
+          <div class="content-row">
+            <div class="cc">
+              <div class="cc-title">
+                <span class="cc-title-dot" style="background:var(--accent)"></span>
+                Aprovações WeAgents
+              </div>
+              <div id="cc-aprv-list"><div class="cc-empty">Aguardando ClickUp…</div></div>
             </div>
-            <div class="pcard" onclick="openTool('senhas','Senhas & APIs','/apis.html')">
-              <div class="pcard-head"><span class="pcard-dot" style="background:#8A7060"></span><span class="pcard-name">Senhas & APIs</span></div>
-              <div class="pcard-desc">Keeper Vault · mapa de credenciais por categoria e plataforma</div>
-              <div class="pcard-cta">Abrir →</div>
+            <div class="cc">
+              <div class="cc-title">
+                <span class="cc-title-dot" style="background:#3A7BD5"></span>
+                Tarefas do Dia
+              </div>
+              <div id="cc-tarefas-list"><div class="cc-empty">Aguardando ClickUp…</div></div>
             </div>
           </div>
         </div>
 
-        <!-- Tool iframe que aparece ao clicar em uma ferramenta -->
+        <!-- Tool iframe que aparece ao clicar em uma ferramenta da sidebar -->
         <div class="tool-overlay" id="tool-overlay">
           <div class="tool-back">
             <button class="back-btn" onclick="closeTool()">← Planner</button>
@@ -512,9 +593,24 @@
       });
     });
 
+    /* ── Date header ── */
+    (function(){
+      var d=new Date();
+      var dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+      var meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+      var ph=$('ph-date');
+      if(ph) ph.textContent=dias[d.getDay()]+', '+d.getDate()+' de '+meses[d.getMonth()]+' de '+d.getFullYear();
+      var h=d.getHours();
+      var saud=h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';
+      var hd=$('ph-heading'); if(hd) hd.textContent=saud+', Laise';
+    })();
+
     /* ── Tool overlay (Planner tab) ── */
     var currentTool=null;
     function openTool(key,title,url){
+      document.querySelectorAll('.sb-tool-btn').forEach(function(b){ b.classList.remove('active'); });
+      var btn=$('tool-btn-'+key); if(btn) btn.classList.add('active');
+
       var overlay=$('tool-overlay');
       $('tool-title').textContent=title;
       overlay.classList.add('visible');
@@ -529,6 +625,8 @@
     }
     function closeTool(){
       $('tool-overlay').classList.remove('visible');
+      document.querySelectorAll('.sb-tool-btn').forEach(function(b){ b.classList.remove('active'); });
+      currentTool=null;
     }
 
     /* ══════════════════════════════════════
@@ -542,9 +640,15 @@
       return d;
     }
 
+    function updateKpiFocos(data){
+      var done=data.done.filter(Boolean).length;
+      var kv=$('kpi-focos'); if(kv) kv.textContent=done+' / 3';
+    }
+
     function renderFocos(){
       var data=loadFocos();
       var el=$('focos-list'); el.innerHTML='';
+      updateKpiFocos(data);
       [0,1,2].forEach(function(i){
         var wrap=document.createElement('div');
         wrap.className='foco-item'+(data.done[i]?' done':'');
@@ -561,6 +665,7 @@
         chk.addEventListener('change',function(){
           data.done[i]=chk.checked; save('wlp_focos',data);
           wrap.className='foco-item'+(chk.checked?' done':'');
+          updateKpiFocos(data);
         });
 
         wrap.appendChild(num); wrap.appendChild(txt); wrap.appendChild(chk);
@@ -579,10 +684,17 @@
       return s;
     }
 
+    function updateKpiRotinas(cfg,state){
+      var total=cfg.length;
+      var done=cfg.filter(function(n){ return state.done[n]; }).length;
+      var kv=$('kpi-rotinas'); if(kv) kv.textContent=done+' / '+total;
+    }
+
     function renderRotinas(){
       var cfg=load('wlp_rot_cfg',DEFAULT_ROT);
       var state=loadRotState();
       var wrap=$('rotinas-wrap'); wrap.innerHTML='';
+      updateKpiRotinas(cfg,state);
       cfg.forEach(function(name){
         var chip=document.createElement('div');
         chip.className='rotina-chip'+(state.done[name]?' done':'');
@@ -590,6 +702,7 @@
         chip.addEventListener('click',function(){
           state.done[name]=!state.done[name]; save('wlp_rotinas',state);
           chip.className='rotina-chip'+(state.done[name]?' done':'');
+          updateKpiRotinas(cfg,state);
         });
         wrap.appendChild(chip);
       });
@@ -641,15 +754,36 @@
       if(all.length){ badge.textContent=all.length; badge.style.display='inline'; }
       else { badge.style.display='none'; }
 
+      /* KPI */
+      var kv=$('kpi-aprv'); if(kv) kv.textContent=all.length||'0';
+
+      /* Sidebar */
       var el=$('aprv-list');
-      if(!all.length){ el.innerHTML='<div class="cu-placeholder">Nenhuma aprovação pendente ✓</div>'; return; }
-      el.innerHTML='';
-      all.slice(0,6).forEach(function(item){
-        var div=document.createElement('div'); div.className='cu-item';
-        div.innerHTML='<div class="cu-brand">'+esc(item.brand)+'</div><div class="cu-name">'+esc(item.name)+'</div>';
-        el.appendChild(div);
-      });
-      if(all.length>6){ var m=document.createElement('div'); m.className='cu-placeholder'; m.textContent='+'+(all.length-6)+' mais'; el.appendChild(m); }
+      if(!all.length){ el.innerHTML='<div class="cu-placeholder">Nenhuma aprovação pendente ✓</div>'; }
+      else {
+        el.innerHTML='';
+        all.slice(0,6).forEach(function(item){
+          var div=document.createElement('div'); div.className='cu-item';
+          div.innerHTML='<div class="cu-brand">'+esc(item.brand)+'</div><div class="cu-name">'+esc(item.name)+'</div>';
+          el.appendChild(div);
+        });
+        if(all.length>6){ var m=document.createElement('div'); m.className='cu-placeholder'; m.textContent='+'+(all.length-6)+' mais'; el.appendChild(m); }
+      }
+
+      /* Card principal */
+      var cc=$('cc-aprv-list');
+      if(cc){
+        if(!all.length){ cc.innerHTML='<div class="cc-empty">Nenhuma aprovação pendente ✓</div>'; }
+        else {
+          cc.innerHTML='';
+          all.slice(0,5).forEach(function(item){
+            var div=document.createElement('div'); div.className='cc-item';
+            div.innerHTML='<div class="cc-brand">'+esc(item.brand)+'</div><div class="cc-name">'+esc(item.name)+'</div>';
+            cc.appendChild(div);
+          });
+          if(all.length>5){ var m2=document.createElement('div'); m2.className='cc-empty'; m2.style.marginTop='6px'; m2.textContent='+'+(all.length-5)+' mais'; cc.appendChild(m2); }
+        }
+      }
     }
 
     async function fetchTarefas(teamId,userId){
@@ -658,16 +792,39 @@
       try{
         var d=await apiGet('/team/'+teamId+'/task?assignees[]='+userId+'&due_date_gt='+s+'&due_date_lt='+e+'&include_closed=false');
         var tasks=d.tasks||[];
+
+        /* KPI */
+        var kv=$('kpi-tarefas'); if(kv) kv.textContent=tasks.length||'0';
+
+        /* Sidebar */
         var el=$('tarefas-list');
-        if(!tasks.length){ el.innerHTML='<div class="cu-placeholder">Sem tarefas hoje ✓</div>'; return; }
-        el.innerHTML='';
-        tasks.slice(0,5).forEach(function(t){
-          var div=document.createElement('div'); div.className='cu-item';
-          div.innerHTML='<div class="cu-name">'+esc(t.name)+'</div>';
-          el.appendChild(div);
-        });
+        if(!tasks.length){ el.innerHTML='<div class="cu-placeholder">Sem tarefas hoje ✓</div>'; }
+        else {
+          el.innerHTML='';
+          tasks.slice(0,5).forEach(function(t){
+            var div=document.createElement('div'); div.className='cu-item';
+            div.innerHTML='<div class="cu-name">'+esc(t.name)+'</div>';
+            el.appendChild(div);
+          });
+        }
+
+        /* Card principal */
+        var cc=$('cc-tarefas-list');
+        if(cc){
+          if(!tasks.length){ cc.innerHTML='<div class="cc-empty">Sem tarefas com prazo para hoje ✓</div>'; }
+          else {
+            cc.innerHTML='';
+            tasks.slice(0,5).forEach(function(t){
+              var div=document.createElement('div'); div.className='cc-item';
+              div.innerHTML='<div class="cc-name">'+esc(t.name)+'</div>';
+              cc.appendChild(div);
+            });
+            if(tasks.length>5){ var m3=document.createElement('div'); m3.className='cc-empty'; m3.style.marginTop='6px'; m3.textContent='+'+(tasks.length-5)+' mais'; cc.appendChild(m3); }
+          }
+        }
       }catch(err){
         $('tarefas-list').innerHTML='<div class="cu-placeholder">Erro ao carregar tarefas</div>';
+        var cc=$('cc-tarefas-list'); if(cc) cc.innerHTML='<div class="cc-empty">Erro ao carregar tarefas</div>';
       }
     }
 
