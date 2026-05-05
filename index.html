@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WL Planner</title>
+  <style>
+    @font-face { font-family:'Lufga'; src:url('fonts/Lufga-Regular.otf')   format('opentype'); font-weight:400; }
+    @font-face { font-family:'Lufga'; src:url('fonts/Lufga-Medium.otf')    format('opentype'); font-weight:500; }
+    @font-face { font-family:'Lufga'; src:url('fonts/Lufga-Bold.otf')      format('opentype'); font-weight:700; }
+    @font-face { font-family:'Lufga'; src:url('fonts/Lufga-ExtraBold.otf') format('opentype'); font-weight:800; }
+
+    :root {
+      --bg:     #F2ECE4;
+      --bg2:    #EDE7DC;
+      --bg3:    #E8E0D4;
+      --border: #D4C8B8;
+      --accent: #C0533A;
+      --text:   #2A1A10;
+      --text2:  #6A5040;
+      --text3:  #A89080;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100vh; overflow:hidden; font-family:'Lufga',system-ui,sans-serif; background:var(--bg); color:var(--text); }
+    body { display:flex; flex-direction:column; }
+
+    /* ══════════════════════════════════════
+       TOP BAR
+    ══════════════════════════════════════ */
+    #topbar {
+      height:54px;
+      background:var(--bg3);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      padding:0 24px;
+      flex-shrink:0;
+      z-index:20;
+      gap:16px;
+    }
+
+    .brand { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .brand svg { height:20px; width:auto; }
+    .brand-text strong { font-size:13px; font-weight:800; color:var(--text); display:block; line-height:1.2; }
+    .brand-text span   { font-size:9px;  font-weight:500; color:var(--text3); letter-spacing:1.2px; text-transform:uppercase; display:block; margin-top:1px; }
+
+    .tab-nav { display:flex; gap:4px; margin-left:auto; }
+
+    .tab-btn {
+      padding:7px 18px;
+      border-radius:9px;
+      border:none;
+      background:transparent;
+      font-family:'Lufga',sans-serif;
+      font-size:13px;
+      font-weight:600;
+      color:var(--text2);
+      cursor:pointer;
+      letter-spacing:.1px;
+      transition:background .12s, color .12s;
+      white-space:nowrap;
+    }
+    .tab-btn:hover  { background:rgba(192,83,58,.08); color:var(--text); }
+    .tab-btn.active { background:rgba(192,83,58,.14); color:var(--accent); }
+
+    /* ══════════════════════════════════════
+       BODY SPLIT
+    ══════════════════════════════════════ */
+    #body-wrap { flex:1; display:flex; overflow:hidden; }
+
+    /* ══════════════════════════════════════
+       SIDEBAR
+    ══════════════════════════════════════ */
+    #sidebar {
+      width:272px;
+      flex-shrink:0;
+      background:var(--bg3);
+      border-right:1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      overflow-y:auto;
+      overflow-x:hidden;
+    }
+    #sidebar::-webkit-scrollbar { width:4px; }
+    #sidebar::-webkit-scrollbar-track { background:transparent; }
+    #sidebar::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+    .sb-section { padding:14px 14px 12px; border-bottom:1px solid var(--border); }
+
+    .sb-label {
+      font-size:9px; font-weight:800;
+      letter-spacing:2px; text-transform:uppercase;
+      color:var(--text3); margin-bottom:10px;
+      display:flex; align-items:center; gap:6px;
+    }
+    .sb-badge {
+      background:var(--accent); color:#fff;
+      border-radius:20px; font-size:9px; padding:1px 6px;
+      font-weight:800; display:none;
+    }
+
+    /* Focos */
+    .foco-item {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:9px 10px;
+      margin-bottom:7px;
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+      transition:opacity .15s;
+    }
+    .foco-item.done { opacity:.55; }
+    .foco-num { font-size:9px; font-weight:800; color:var(--accent); flex-shrink:0; margin-top:2px; }
+    .foco-text {
+      font-size:12px; color:var(--text);
+      flex:1; outline:none; font-family:'Lufga',sans-serif; line-height:1.45;
+      min-height:16px;
+    }
+    .foco-text:empty::before { content:attr(data-ph); color:var(--text3); font-style:italic; }
+    .foco-check {
+      width:14px; height:14px; flex-shrink:0; border-radius:4px;
+      border:1.5px solid var(--border); appearance:none; cursor:pointer; margin-top:2px;
+      transition:background .12s, border-color .12s;
+    }
+    .foco-check:checked { background:var(--accent); border-color:var(--accent); }
+
+    /* Rotinas */
+    .rotinas-wrap { display:flex; flex-wrap:wrap; gap:5px; }
+    .rotina-chip {
+      padding:4px 9px; border-radius:20px;
+      font-size:10px; font-weight:600;
+      background:var(--bg2); border:1px solid var(--border);
+      color:var(--text2); cursor:pointer;
+      font-family:'Lufga',sans-serif; user-select:none;
+      transition:background .12s, border-color .12s, color .12s;
+    }
+    .rotina-chip.done {
+      background:rgba(192,83,58,.11);
+      border-color:rgba(192,83,58,.28);
+      color:var(--accent);
+      text-decoration:line-through;
+    }
+
+    /* ClickUp items */
+    .cu-item {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:9px;
+      padding:7px 10px;
+      margin-bottom:5px;
+    }
+    .cu-brand { font-size:9px; font-weight:800; letter-spacing:.8px; color:var(--accent); }
+    .cu-name {
+      font-size:11px; color:var(--text);
+      margin-top:2px; line-height:1.35;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    }
+    .cu-placeholder { font-size:11px; color:var(--text3); font-style:italic; }
+    .cu-loading { font-size:10px; color:var(--text3); }
+
+    /* Sidebar bottom */
+    .sb-footer {
+      margin-top:auto;
+      padding:10px 14px;
+      border-top:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .cu-status-txt { font-size:10px; color:var(--text3); flex:1; }
+    .gear-btn {
+      width:26px; height:26px; border-radius:7px;
+      border:1px solid var(--border); background:var(--bg2);
+      cursor:pointer; font-size:12px;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .12s, border-color .12s;
+    }
+    .gear-btn:hover { background:var(--bg); border-color:var(--accent); }
+
+    /* ══════════════════════════════════════
+       MAIN CONTENT
+    ══════════════════════════════════════ */
+    #main { flex:1; position:relative; overflow:hidden; }
+
+    .panel { position:absolute; inset:0; display:none; }
+    .panel.active { display:flex; flex-direction:column; }
+
+    /* iframe fill */
+    .iframe-fill { flex:1; position:relative; }
+    .iframe-fill iframe { width:100%; height:100%; border:none; display:block; }
+
+    /* Loader overlay */
+    .frame-loading {
+      position:absolute; inset:0;
+      background:var(--bg);
+      display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+      pointer-events:none; transition:opacity .3s;
+    }
+    .frame-loading.hidden { opacity:0; }
+    .spinner { width:24px; height:24px; border:2px solid rgba(192,83,58,.15); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
+    .spinner-lbl { font-size:11px; color:var(--text3); }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── Planner tab: ferramentas home ── */
+    .planner-home { overflow-y:auto; height:100%; padding:44px 48px; }
+    .ph-heading { font-size:20px; font-weight:800; color:var(--text); margin-bottom:6px; }
+    .ph-sub { font-size:12px; color:var(--text3); margin-bottom:36px; }
+    .ph-section { font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:12px; }
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-bottom:40px; }
+    .pcard {
+      background:var(--bg2); border:1px solid var(--border);
+      border-radius:16px; padding:22px 20px 18px;
+      cursor:pointer; display:flex; flex-direction:column; gap:10px;
+      transition:box-shadow .15s, transform .15s, border-color .15s;
+      text-decoration:none;
+    }
+    .pcard:hover { box-shadow:0 8px 28px rgba(42,26,16,.10); transform:translateY(-2px); border-color:rgba(192,83,58,.25); }
+    .pcard:active { transform:none; }
+    .pcard-head { display:flex; align-items:center; gap:10px; }
+    .pcard-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .pcard-name { font-size:14px; font-weight:700; color:var(--text); }
+    .pcard-desc { font-size:11px; color:var(--text3); line-height:1.6; }
+    .pcard-cta  { font-size:10px; font-weight:700; color:var(--accent); margin-top:auto; }
+
+    /* tool iframe overlay */
+    .tool-overlay {
+      position:absolute; inset:0; display:none; flex-direction:column; z-index:5;
+    }
+    .tool-overlay.visible { display:flex; }
+    .tool-back {
+      padding:10px 20px; background:var(--bg3); border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:10px; flex-shrink:0;
+    }
+    .back-btn {
+      font-family:'Lufga',sans-serif; font-size:11px; font-weight:600;
+      color:var(--text3); background:none; border:none; cursor:pointer;
+      padding:4px 10px; border-radius:7px;
+      transition:background .12s, color .12s;
+    }
+    .back-btn:hover { background:rgba(192,83,58,.08); color:var(--accent); }
+    .tool-title { font-size:12px; font-weight:700; color:var(--text2); }
+    .tool-iframe-wrap { flex:1; position:relative; }
+    .tool-iframe-wrap iframe { width:100%; height:100%; border:none; display:block; }
+
+    /* ══════════════════════════════════════
+       MODAL — ClickUp setup
+    ══════════════════════════════════════ */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(42,26,16,.35);
+      display:flex; align-items:center; justify-content:center;
+      z-index:100; opacity:0; pointer-events:none; transition:opacity .2s;
+    }
+    .modal-overlay.open { opacity:1; pointer-events:auto; }
+    .modal {
+      background:var(--bg); border-radius:18px; padding:28px;
+      width:420px; max-width:94vw;
+      box-shadow:0 20px 60px rgba(42,26,16,.18);
+      transform:translateY(12px); transition:transform .2s;
+    }
+    .modal-overlay.open .modal { transform:translateY(0); }
+    .modal h2 { font-size:16px; font-weight:800; margin-bottom:4px; }
+    .modal p  { font-size:12px; color:var(--text3); margin-bottom:18px; line-height:1.55; }
+    .modal label { font-size:11px; font-weight:700; color:var(--text2); display:block; margin-bottom:6px; }
+    .modal input {
+      width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid var(--border);
+      background:var(--bg2); font-size:13px; color:var(--text); outline:none;
+      font-family:'Lufga',sans-serif; transition:border-color .12s;
+    }
+    .modal input:focus { border-color:var(--accent); }
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:18px; }
+    .btn-primary {
+      padding:8px 20px; border-radius:9px; border:none; background:var(--accent);
+      color:#fff; font-family:'Lufga',sans-serif; font-size:13px; font-weight:700;
+      cursor:pointer; transition:background .12s;
+    }
+    .btn-primary:hover { background:#A04030; }
+    .btn-sec {
+      padding:8px 16px; border-radius:9px; border:1px solid var(--border);
+      background:var(--bg2); color:var(--text2); font-family:'Lufga',sans-serif;
+      font-size:13px; font-weight:600; cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ TOP BAR ══════════════════════════════════════════ -->
+  <header id="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 28 20" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,10 6,2 12,10 6,18" fill="#C0533A"/>
+        <polygon points="8,10 14,2 20,10 14,18" fill="#D4844A" opacity=".75"/>
+        <polygon points="16,10 22,2 28,10 22,18" fill="#C4962C" opacity=".5"/>
+      </svg>
+      <div class="brand-text">
+        <strong>WL Planner</strong>
+        <span>Painel Central</span>
+      </div>
+    </div>
+
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="planner">Planner</button>
+      <button class="tab-btn" data-tab="wlc">We Love Chile</button>
+      <button class="tab-btn" data-tab="wlb">We Love Business</button>
+      <button class="tab-btn" data-tab="wlh">We Love Homes</button>
+    </nav>
+  </header>
+
+  <!-- ═══ BODY ═════════════════════════════════════════════ -->
+  <div id="body-wrap">
+
+    <!-- ─── SIDEBAR ──────────────────────────────────────── -->
+    <aside id="sidebar">
+
+      <!-- Focos do Dia -->
+      <div class="sb-section">
+        <div class="sb-label">3 Focos do Dia</div>
+        <div id="focos-list"></div>
+      </div>
+
+      <!-- Rotinas -->
+      <div class="sb-section">
+        <div class="sb-label">Rotinas</div>
+        <div class="rotinas-wrap" id="rotinas-wrap"></div>
+      </div>
+
+      <!-- Aprovações WeAgents -->
+      <div class="sb-section">
+        <div class="sb-label">
+          Aprovações WeAgents
+          <span class="sb-badge" id="aprv-badge"></span>
+        </div>
+        <div id="aprv-list"><div class="cu-loading">Aguardando ClickUp…</div></div>
+      </div>
+
+      <!-- Tarefas do Dia -->
+      <div class="sb-section">
+        <div class="sb-label">Tarefas do Dia</div>
+        <div id="tarefas-list"><div class="cu-loading">Aguardando ClickUp…</div></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="sb-footer">
+        <span class="cu-status-txt" id="cu-status">ClickUp não conectado</span>
+        <button class="gear-btn" onclick="openModal()" title="Configurar ClickUp">⚙️</button>
+      </div>
+
+    </aside>
+
+    <!-- ─── MAIN ──────────────────────────────────────────── -->
+    <div id="main">
+
+      <!-- PLANNER: ferramentas + calendário -->
+      <div class="panel active" id="panel-planner">
+        <div class="planner-home" id="ph-home">
+          <div class="ph-heading">Ferramentas</div>
+          <div class="ph-sub">Acesse suas ferramentas ou abra uma marca para começar</div>
+
+          <div class="ph-section">Produção de Conteúdo</div>
+          <div class="card-grid">
+            <div class="pcard" onclick="openTool('maquina','Máquina de Conteúdos','https://maquinadeconteudos47.netlify.app')">
+              <div class="pcard-head"><span class="pcard-dot" style="background:#3A7BD5"></span><span class="pcard-name">Máquina de Conteúdos</span></div>
+              <div class="pcard-desc">Pipeline semanal Sistema 1×10 · gestão cross-canal de produção</div>
+              <div class="pcard-cta">Abrir →</div>
+            </div>
+          </div>
+
+          <div class="ph-section">Pessoal</div>
+          <div class="card-grid">
+            <div class="pcard" onclick="openTool('financas','Finanças','https://financas-welove.netlify.app')">
+              <div class="pcard-head"><span class="pcard-dot" style="background:#5C8C5C"></span><span class="pcard-name">Finanças</span></div>
+              <div class="pcard-desc">Dashboard financeiro pessoal · receitas · despesas · metas</div>
+              <div class="pcard-cta">Abrir →</div>
+            </div>
+            <div class="pcard" onclick="openTool('senhas','Senhas & APIs','/apis.html')">
+              <div class="pcard-head"><span class="pcard-dot" style="background:#8A7060"></span><span class="pcard-name">Senhas & APIs</span></div>
+              <div class="pcard-desc">Keeper Vault · mapa de credenciais por categoria e plataforma</div>
+              <div class="pcard-cta">Abrir →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool iframe que aparece ao clicar em uma ferramenta -->
+        <div class="tool-overlay" id="tool-overlay">
+          <div class="tool-back">
+            <button class="back-btn" onclick="closeTool()">← Planner</button>
+            <span class="tool-title" id="tool-title"></span>
+          </div>
+          <div class="tool-iframe-wrap">
+            <div class="frame-loading" id="loading-tool">
+              <div class="spinner"></div>
+              <span class="spinner-lbl">Carregando…</span>
+            </div>
+            <iframe id="frame-tool" title="Ferramenta"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- WLC -->
+      <div class="panel" id="panel-wlc">
+        <div class="iframe-fill">
+          <div class="frame-loading" id="loading-wlc">
+            <div class="spinner" style="border-top-color:#CC2200"></div>
+            <span class="spinner-lbl">Carregando We Love Chile…</span>
+          </div>
+          <iframe id="frame-wlc" title="We Love Chile — Central"></iframe>
+        </div>
+      </div>
+
+      <!-- WLB -->
+      <div class="panel" id="panel-wlb">
+        <div class="iframe-fill">
+          <div class="frame-loading" id="loading-wlb">
+            <div class="spinner" style="border-top-color:#E87820"></div>
+            <span class="spinner-lbl">Carregando We Love Business…</span>
+          </div>
+          <iframe id="frame-wlb" title="We Love Business — Central"></iframe>
+        </div>
+      </div>
+
+      <!-- WLH -->
+      <div class="panel" id="panel-wlh">
+        <div class="iframe-fill">
+          <div class="frame-loading" id="loading-wlh">
+            <div class="spinner" style="border-top-color:#D4A800"></div>
+            <span class="spinner-lbl">Carregando We Love Homes…</span>
+          </div>
+          <iframe id="frame-wlh" title="We Love Homes — Central"></iframe>
+        </div>
+      </div>
+
+    </div><!-- #main -->
+  </div><!-- #body-wrap -->
+
+  <!-- ═══ MODAL ════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <h2>🔗 Conectar ao ClickUp</h2>
+      <p>Cole seu Personal API Token. Ele fica salvo no navegador e você não precisará repetir.<br>Encontre em: ClickUp → Settings → Apps → API Token.</p>
+      <label for="token-input">Personal API Token</label>
+      <input type="password" id="token-input" placeholder="pk_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      <div class="modal-actions">
+        <button class="btn-sec" onclick="closeModal()">Cancelar</button>
+        <button class="btn-primary" onclick="saveToken()">Conectar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var API       = 'https://api.clickup.com/api/v2';
+    var REVISAR   = { WLC:'901327022292', WLB:'901327022294', WLH:'901327022296' };
+    var TODAY     = new Date();
+    var TODAY_MS  = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate()).getTime();
+
+    /* ── helpers ── */
+    function $(id){ return document.getElementById(id); }
+    function load(k,d){ try{ var v=localStorage.getItem(k); return v ? JSON.parse(v):d; }catch(e){ return d; } }
+    function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+    function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+    /* ── hash setup: #t=TOKEN ── */
+    (function(){
+      var h=location.hash;
+      if(h && h.indexOf('t=')!==-1){
+        var m=h.match(/[#&]t=([^&]+)/);
+        if(m&&m[1]){ save('wlp_token',m[1]); save('wlp_user',null); save('wlp_team',null); }
+        history.replaceState(null,'',location.pathname+location.search);
+      }
+    })();
+
+    function getToken(){ return load('wlp_token',null); }
+
+    /* ── Modal ── */
+    function openModal(){ $('modal-overlay').classList.add('open'); $('token-input').focus(); }
+    function closeModal(){ $('modal-overlay').classList.remove('open'); }
+    function closeModalOutside(e){ if(e.target===$('modal-overlay')) closeModal(); }
+    function saveToken(){
+      var t=$('token-input').value.trim();
+      if(!t){ $('token-input').focus(); return; }
+      save('wlp_token',t); save('wlp_user',null); save('wlp_team',null);
+      closeModal();
+      initClickUp();
+    }
+
+    /* ── Tab navigation ── */
+    var brandUrls  = { wlc:'https://wlc-central.netlify.app', wlb:'https://wlb-central.netlify.app', wlh:'https://wlh-central.netlify.app' };
+    var iframeLoaded = {};
+
+    document.querySelectorAll('.tab-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var tab=btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+        $('panel-'+tab).classList.add('active');
+
+        if(tab!=='planner' && !iframeLoaded[tab]){
+          iframeLoaded[tab]=true;
+          var iframe=$('frame-'+tab);
+          var loading=$('loading-'+tab);
+          iframe.src=brandUrls[tab];
+          iframe.addEventListener('load',function(){
+            loading.classList.add('hidden');
+            setTimeout(function(){ loading.style.display='none'; },320);
+          });
+        }
+      });
+    });
+
+    /* ── Tool overlay (Planner tab) ── */
+    var currentTool=null;
+    function openTool(key,title,url){
+      var overlay=$('tool-overlay');
+      $('tool-title').textContent=title;
+      overlay.classList.add('visible');
+
+      if(currentTool!==key){
+        currentTool=key;
+        var ldr=$('loading-tool'); ldr.classList.remove('hidden'); ldr.style.display='flex';
+        var fr=$('frame-tool');
+        fr.src=url;
+        fr.onload=function(){ ldr.classList.add('hidden'); setTimeout(function(){ ldr.style.display='none'; },320); };
+      }
+    }
+    function closeTool(){
+      $('tool-overlay').classList.remove('visible');
+    }
+
+    /* ══════════════════════════════════════
+       FOCOS DO DIA
+    ══════════════════════════════════════ */
+    var FOCOS_PH=['Qual é o foco principal de hoje?','Segundo foco do dia…','Terceiro foco do dia…'];
+
+    function loadFocos(){
+      var d=load('wlp_focos',{texts:['','',''],done:[false,false,false],date:0});
+      if(d.date!==TODAY_MS){ d.done=[false,false,false]; d.date=TODAY_MS; save('wlp_focos',d); }
+      return d;
+    }
+
+    function renderFocos(){
+      var data=loadFocos();
+      var el=$('focos-list'); el.innerHTML='';
+      [0,1,2].forEach(function(i){
+        var wrap=document.createElement('div');
+        wrap.className='foco-item'+(data.done[i]?' done':'');
+
+        var num=document.createElement('span'); num.className='foco-num'; num.textContent='0'+(i+1);
+
+        var txt=document.createElement('div');
+        txt.className='foco-text'; txt.contentEditable='true';
+        txt.setAttribute('data-ph',FOCOS_PH[i]); txt.textContent=data.texts[i]||'';
+        txt.addEventListener('blur',function(){ data.texts[i]=txt.textContent.trim(); save('wlp_focos',data); });
+
+        var chk=document.createElement('input');
+        chk.type='checkbox'; chk.className='foco-check'; chk.checked=data.done[i];
+        chk.addEventListener('change',function(){
+          data.done[i]=chk.checked; save('wlp_focos',data);
+          wrap.className='foco-item'+(chk.checked?' done':'');
+        });
+
+        wrap.appendChild(num); wrap.appendChild(txt); wrap.appendChild(chk);
+        el.appendChild(wrap);
+      });
+    }
+
+    /* ══════════════════════════════════════
+       ROTINAS
+    ══════════════════════════════════════ */
+    var DEFAULT_ROT=['💧 Água 8 copos','🏃 Exercício','📖 Leitura 20min','🌿 Skincare','🧘 Meditação'];
+
+    function loadRotState(){
+      var s=load('wlp_rotinas',{date:0,done:{}});
+      if(s.date!==TODAY_MS){ s={date:TODAY_MS,done:{}}; save('wlp_rotinas',s); }
+      return s;
+    }
+
+    function renderRotinas(){
+      var cfg=load('wlp_rot_cfg',DEFAULT_ROT);
+      var state=loadRotState();
+      var wrap=$('rotinas-wrap'); wrap.innerHTML='';
+      cfg.forEach(function(name){
+        var chip=document.createElement('div');
+        chip.className='rotina-chip'+(state.done[name]?' done':'');
+        chip.textContent=name;
+        chip.addEventListener('click',function(){
+          state.done[name]=!state.done[name]; save('wlp_rotinas',state);
+          chip.className='rotina-chip'+(state.done[name]?' done':'');
+        });
+        wrap.appendChild(chip);
+      });
+    }
+
+    /* ══════════════════════════════════════
+       CLICKUP
+    ══════════════════════════════════════ */
+    async function apiGet(path){
+      var tok=getToken(); if(!tok) throw new Error('no-token');
+      var r=await fetch(API+path,{headers:{Authorization:tok}});
+      if(!r.ok){ var e=await r.json().catch(function(){return{};}); throw new Error((e&&e.err)||r.status); }
+      return r.json();
+    }
+
+    async function initClickUp(){
+      if(!getToken()){
+        $('cu-status').textContent='ClickUp não conectado';
+        $('aprv-list').innerHTML='<div class="cu-placeholder">Clique em ⚙️ para conectar</div>';
+        $('tarefas-list').innerHTML='<div class="cu-placeholder">Clique em ⚙️ para conectar</div>';
+        return;
+      }
+      try{
+        var user=load('wlp_user',null);
+        var team=load('wlp_team',null);
+        if(!user){ var ud=await apiGet('/user'); user=ud.user; save('wlp_user',user); }
+        if(!team){ var td=await apiGet('/team'); team=td.teams[0]; save('wlp_team',team); }
+        $('cu-status').textContent='ClickUp · '+user.username;
+        await Promise.all([fetchAprovacoes(), fetchTarefas(team.id,user.id)]);
+      }catch(err){
+        if(err.message==='no-token') return;
+        save('wlp_token',null); save('wlp_user',null); save('wlp_team',null);
+        $('cu-status').textContent='Token inválido — ⚙️ reconectar';
+        $('aprv-list').innerHTML='<div class="cu-placeholder">Token inválido</div>';
+        $('tarefas-list').innerHTML='<div class="cu-placeholder">Token inválido</div>';
+      }
+    }
+
+    async function fetchAprovacoes(){
+      $('aprv-list').innerHTML='<div class="cu-loading">Carregando…</div>';
+      var all=[];
+      for(var brand in REVISAR){
+        try{
+          var d=await apiGet('/list/'+REVISAR[brand]+'/task?subtasks=false&include_closed=false&order_by=created&reverse=true');
+          (d.tasks||[]).forEach(function(t){ all.push({brand:brand,name:t.name}); });
+        }catch(e){}
+      }
+      var badge=$('aprv-badge');
+      if(all.length){ badge.textContent=all.length; badge.style.display='inline'; }
+      else { badge.style.display='none'; }
+
+      var el=$('aprv-list');
+      if(!all.length){ el.innerHTML='<div class="cu-placeholder">Nenhuma aprovação pendente ✓</div>'; return; }
+      el.innerHTML='';
+      all.slice(0,6).forEach(function(item){
+        var div=document.createElement('div'); div.className='cu-item';
+        div.innerHTML='<div class="cu-brand">'+esc(item.brand)+'</div><div class="cu-name">'+esc(item.name)+'</div>';
+        el.appendChild(div);
+      });
+      if(all.length>6){ var m=document.createElement('div'); m.className='cu-placeholder'; m.textContent='+'+(all.length-6)+' mais'; el.appendChild(m); }
+    }
+
+    async function fetchTarefas(teamId,userId){
+      $('tarefas-list').innerHTML='<div class="cu-loading">Carregando…</div>';
+      var s=TODAY_MS, e=s+86400000;
+      try{
+        var d=await apiGet('/team/'+teamId+'/task?assignees[]='+userId+'&due_date_gt='+s+'&due_date_lt='+e+'&include_closed=false');
+        var tasks=d.tasks||[];
+        var el=$('tarefas-list');
+        if(!tasks.length){ el.innerHTML='<div class="cu-placeholder">Sem tarefas hoje ✓</div>'; return; }
+        el.innerHTML='';
+        tasks.slice(0,5).forEach(function(t){
+          var div=document.createElement('div'); div.className='cu-item';
+          div.innerHTML='<div class="cu-name">'+esc(t.name)+'</div>';
+          el.appendChild(div);
+        });
+      }catch(err){
+        $('tarefas-list').innerHTML='<div class="cu-placeholder">Erro ao carregar tarefas</div>';
+      }
+    }
+
+    /* ── INIT ── */
+    renderFocos();
+    renderRotinas();
+    initClickUp();
+  </script>
+</body>
+</html>

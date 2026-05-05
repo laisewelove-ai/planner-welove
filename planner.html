@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WL Planner</title>
+<style>
+@font-face { font-family:'Lufga'; src:url('fonts/Lufga-Regular.otf') format('opentype'); font-weight:400; font-style:normal; }
+@font-face { font-family:'Lufga'; src:url('fonts/Lufga-Medium.otf')  format('opentype'); font-weight:500; font-style:normal; }
+@font-face { font-family:'Lufga'; src:url('fonts/Lufga-Bold.otf')    format('opentype'); font-weight:700; font-style:normal; }
+@font-face { font-family:'Lufga'; src:url('fonts/Lufga-ExtraBold.otf') format('opentype'); font-weight:800; font-style:normal; }
+:root {
+  --bg:      #F2ECE4;
+  --bg2:     #EDE7DC;
+  --bg3:     #E8E0D4;
+  --border:  #D4C8B8;
+  --accent:  #C0533A;
+  --accent2: #D4844A;
+  --green:   #5C8C5C;
+  --mustard: #C4962C;
+  --text:    #2A1A10;
+  --text2:   #6A5040;
+  --text3:   #A89080;
+  --shadow:  0 2px 12px rgba(42,26,16,.07);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; background:var(--bg); font-family:'Lufga',system-ui,-apple-system,sans-serif; color:var(--text); }
+body { display:flex; flex-direction:column; overflow-x:hidden; }
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+
+/* ── Layout ── */
+.planner { flex:1; display:flex; flex-direction:column; gap:0; padding:22px 28px 32px; max-width:1200px; width:100%; margin:0 auto; }
+
+/* ── Header ── */
+.header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:18px; }
+.greeting h1 { font-size:22px; font-weight:800; color:var(--text); letter-spacing:-.3px; }
+.greeting .date { font-size:12px; color:var(--text3); margin-top:3px; }
+.header-actions { display:flex; gap:8px; align-items:center; }
+.btn-sm {
+  padding:6px 13px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg3); color:var(--text2); font-size:11px; font-weight:600;
+  cursor:pointer; transition:background .12s, border-color .12s, color .12s;
+}
+.btn-sm:hover { background:var(--bg2); border-color:var(--accent); color:var(--accent); }
+.btn-icon { padding:6px 10px; font-size:14px; }
+
+/* ── Setup banner ── */
+.setup-banner {
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(192,83,58,.08); border:1px solid rgba(192,83,58,.25);
+  border-radius:10px; padding:10px 16px; margin-bottom:16px;
+  font-size:12px; color:var(--text2);
+}
+.setup-banner b { color:var(--accent); }
+.setup-banner .btn-sm { white-space:nowrap; }
+
+/* ── Modal overlay ── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(42,26,16,.35);
+  display:flex; align-items:center; justify-content:center;
+  z-index:100; opacity:0; pointer-events:none; transition:opacity .2s;
+}
+.modal-overlay.open { opacity:1; pointer-events:auto; }
+.modal {
+  background:var(--bg); border-radius:18px; padding:28px;
+  width:440px; max-width:94vw; box-shadow:0 20px 60px rgba(42,26,16,.18);
+  transform:translateY(12px); transition:transform .2s;
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+.modal h2 { font-size:16px; font-weight:800; margin-bottom:4px; }
+.modal p  { font-size:12px; color:var(--text3); margin-bottom:18px; line-height:1.55; }
+.modal label { font-size:11px; font-weight:700; color:var(--text2); display:block; margin-bottom:6px; }
+.modal input[type=text], .modal input[type=password] {
+  width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid var(--border);
+  background:var(--bg2); font-size:13px; color:var(--text); outline:none;
+  transition:border-color .12s;
+}
+.modal input:focus { border-color:var(--accent); }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:18px; }
+.btn-primary {
+  padding:8px 20px; border-radius:9px; border:none;
+  background:var(--accent); color:#fff; font-size:13px; font-weight:700;
+  cursor:pointer; transition:background .12s;
+}
+.btn-primary:hover { background:#A04030; }
+.modal-note { font-size:10px; color:var(--text3); margin-top:12px; line-height:1.5; }
+.modal-note a { color:var(--accent); }
+
+/* ── Section labels ── */
+.section-label { font-size:9px; font-weight:800; letter-spacing:1.8px; text-transform:uppercase; color:var(--text3); margin-bottom:10px; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.section-header h2 { font-size:12px; font-weight:800; letter-spacing:1.4px; text-transform:uppercase; color:var(--text2); }
+.ver-link { font-size:11px; font-weight:600; color:var(--accent); text-decoration:none; cursor:pointer; }
+.ver-link:hover { text-decoration:underline; }
+.badge { display:inline-flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; font-size:9px; font-weight:800; border-radius:20px; min-width:18px; height:18px; padding:0 5px; margin-left:6px; }
+.badge.zero { background:var(--bg3); color:var(--text3); }
+
+/* ── Spinner ── */
+.spinner { width:20px; height:20px; border:2px solid rgba(192,83,58,.2); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-row { display:flex; align-items:center; gap:8px; padding:20px; font-size:12px; color:var(--text3); }
+
+/* ═══ ZONA 1 — Focos ═══ */
+.focos-zone { margin-bottom:18px; }
+.focos-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.foco-card {
+  background:var(--bg3); border:1.5px solid var(--border); border-radius:14px;
+  padding:16px; display:flex; flex-direction:column; gap:8px; cursor:text;
+  transition:border-color .15s, box-shadow .15s;
+}
+.foco-card:has(.foco-text:focus) { border-color:var(--accent); box-shadow:0 0 0 3px rgba(192,83,58,.10); }
+.foco-card.done { opacity:.65; }
+.foco-card.done .foco-text { text-decoration:line-through; color:var(--text3); }
+.foco-num { font-size:10px; font-weight:800; letter-spacing:1px; color:var(--accent); opacity:.7; }
+.foco-card.done .foco-num { color:var(--text3); }
+.foco-text { font-size:14px; font-weight:600; color:var(--text); min-height:42px; outline:none; line-height:1.4; }
+.foco-text:empty::before { content:attr(data-placeholder); color:var(--text3); font-weight:400; font-style:italic; pointer-events:none; }
+.foco-footer { display:flex; align-items:center; justify-content:flex-end; }
+.foco-check-btn {
+  display:flex; align-items:center; gap:5px; background:none;
+  border:1.5px solid var(--border); border-radius:7px; padding:4px 10px;
+  font-size:10px; font-weight:700; color:var(--text3); cursor:pointer; transition:all .12s;
+}
+.foco-check-btn:hover { border-color:var(--green); color:var(--green); }
+.foco-card.done .foco-check-btn { border-color:var(--green); color:var(--green); background:rgba(92,140,92,.08); }
+
+/* ═══ COLS ═══ */
+.main-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.card { background:var(--bg3); border:1px solid var(--border); border-radius:14px; padding:16px; }
+.card + .card { margin-top:12px; }
+
+/* ─ Aprovações ─ */
+.aprovacao-item {
+  display:flex; flex-direction:column; gap:4px;
+  padding:12px; background:var(--bg2); border-radius:10px;
+  border-left:3px solid var(--accent); margin-bottom:8px;
+}
+.aprovacao-item:last-child { margin-bottom:0; }
+.apr-brand { display:inline-block; font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:2px 7px; border-radius:5px; margin-bottom:2px; }
+.apr-brand.wlc { background:rgba(204,34,0,.12); color:#CC2200; }
+.apr-brand.wlb { background:rgba(232,120,32,.12); color:#C06010; }
+.apr-brand.wlh { background:rgba(212,168,0,.12); color:#8A6600; }
+.apr-brand.wlp { background:rgba(192,83,58,.12); color:var(--accent); }
+.apr-title { font-size:13px; font-weight:700; color:var(--text); }
+.apr-meta  { font-size:11px; color:var(--text3); }
+.apr-link  {
+  align-self:flex-end; font-size:10px; font-weight:700; color:var(--accent);
+  text-decoration:none; padding:3px 8px; border:1px solid var(--border);
+  border-radius:6px; margin-top:4px; background:var(--bg); cursor:pointer;
+}
+.apr-link:hover { border-color:var(--accent); background:rgba(192,83,58,.06); }
+.empty-state { text-align:center; padding:24px 0; color:var(--text3); font-size:12px; }
+.empty-state .empty-icon { font-size:26px; margin-bottom:8px; }
+
+/* ─ Tarefas ─ */
+.tarefa-group-label {
+  font-size:9px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;
+  color:var(--text3); margin:10px 0 4px; padding-bottom:4px; border-bottom:1px solid var(--border);
+}
+.tarefa-group-label:first-child { margin-top:0; }
+.tarefa-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid rgba(212,200,184,.5); }
+.tarefa-item:last-child { border-bottom:none; }
+.tarefa-check {
+  width:16px; height:16px; border:1.5px solid var(--border); border-radius:50%;
+  flex-shrink:0; margin-top:1px; cursor:pointer; transition:border-color .12s, background .12s; position:relative;
+}
+.tarefa-check:hover { border-color:var(--green); }
+.tarefa-item.done .tarefa-check { background:var(--green); border-color:var(--green); }
+.tarefa-item.done .tarefa-check::after { content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:9px; color:#fff; font-weight:800; }
+.tarefa-body { flex:1; }
+.tarefa-title { font-size:13px; font-weight:500; color:var(--text); line-height:1.3; }
+.tarefa-item.done .tarefa-title { text-decoration:line-through; color:var(--text3); }
+.tarefa-time { font-size:10px; color:var(--text3); margin-top:2px; }
+
+/* ─ Rotinas ─ */
+.rotinas-grid { display:flex; flex-wrap:wrap; gap:8px; }
+.rotina-chip {
+  display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:20px;
+  border:1.5px solid var(--border); background:var(--bg2); font-size:12px;
+  font-weight:600; color:var(--text2); cursor:pointer; transition:all .12s; user-select:none;
+}
+.rotina-chip:hover { border-color:var(--accent); }
+.rotina-chip.done { background:rgba(92,140,92,.12); border-color:var(--green); color:var(--green); }
+.rotina-chip .chip-check { display:none; font-size:11px; font-weight:800; }
+.rotina-chip.done .chip-check { display:inline; }
+
+/* ═══ CALENDÁRIO ═══ */
+.calendario-section { margin-top:4px; }
+.cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.cal-tabs { display:flex; gap:4px; background:var(--bg3); border:1px solid var(--border); border-radius:9px; padding:3px; }
+.cal-tab { padding:5px 14px; border-radius:7px; border:none; background:transparent; font-size:11px; font-weight:600; color:var(--text3); cursor:pointer; transition:background .12s, color .12s; }
+.cal-tab.active { background:var(--bg); color:var(--accent); box-shadow:var(--shadow); }
+.cal-tab:not(.active):hover { color:var(--text2); }
+.cal-day { background:var(--bg3); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.cal-slot { display:flex; align-items:stretch; border-bottom:1px solid var(--border); min-height:44px; }
+.cal-slot:last-child { border-bottom:none; }
+.cal-time { width:60px; flex-shrink:0; padding:10px 12px; font-size:11px; font-weight:600; color:var(--text3); background:var(--bg2); border-right:1px solid var(--border); display:flex; align-items:center; }
+.cal-event-area { flex:1; padding:8px 14px; display:flex; align-items:center; }
+.cal-event-area.free { color:var(--text3); font-size:11px; font-style:italic; }
+.cal-event { background:rgba(192,83,58,.10); border-left:3px solid var(--accent); border-radius:6px; padding:6px 10px; font-size:12px; font-weight:600; color:var(--text); width:100%; }
+.cal-event.green { background:rgba(92,140,92,.10); border-left-color:var(--green); }
+.cal-event.mustard { background:rgba(196,150,44,.10); border-left-color:var(--mustard); }
+.cal-week { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
+.week-day { background:var(--bg3); border:1px solid var(--border); border-radius:10px; padding:10px; min-height:90px; }
+.week-day.today { border-color:var(--accent); }
+.week-day-label { font-size:10px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.8px; margin-bottom:4px; }
+.week-day.today .week-day-label { color:var(--accent); }
+.week-day-num { font-size:18px; font-weight:800; color:var(--text); margin-bottom:4px; }
+.week-day.today .week-day-num { color:var(--accent); }
+.week-event-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); display:inline-block; margin:1px; }
+.cal-month { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.month-header { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--text3); text-align:center; padding:6px 0; }
+.month-day { background:var(--bg3); border:1px solid var(--border); border-radius:8px; min-height:58px; padding:6px; font-size:11px; font-weight:600; color:var(--text2); }
+.month-day.today { border-color:var(--accent); background:rgba(192,83,58,.06); color:var(--accent); font-weight:800; }
+.month-day.other-month { opacity:.35; }
+.month-event { margin-top:3px; font-size:9px; font-weight:700; background:rgba(192,83,58,.12); color:var(--accent); border-radius:4px; padding:1px 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <h2>🔗 Conectar ao ClickUp</h2>
+    <p>Cole seu token pessoal do ClickUp para ver aprovações e tarefas em tempo real. O token fica salvo só aqui no seu computador.</p>
+    <label>Token pessoal do ClickUp</label>
+    <input type="password" id="token-input" placeholder="pk_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+    <div class="modal-note">
+      Encontre em: <a href="https://app.clickup.com/settings/apps" target="_blank">ClickUp → Settings → Apps → API Token</a>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sm" onclick="closeModal()">Agora não</button>
+      <button class="btn-primary" onclick="saveToken()">Conectar</button>
+    </div>
+  </div>
+</div>
+
+<div class="planner">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="greeting">
+      <h1 id="greeting-text">Bom dia, Laise ✨</h1>
+      <div class="date" id="date-text"></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm" onclick="resetFocos()">↺ Focos</button>
+      <button class="btn-sm" onclick="resetRotinas()">↺ Rotinas</button>
+      <button class="btn-sm btn-icon" onclick="openModal()" title="Configurar ClickUp">⚙️</button>
+    </div>
+  </header>
+
+  <!-- BANNER setup (visível se sem token) -->
+  <div class="setup-banner" id="setup-banner" style="display:none;">
+    <span>🔗 Conecte ao <b>ClickUp</b> para ver suas aprovações e tarefas em tempo real</span>
+    <button class="btn-sm" onclick="openModal()">Configurar →</button>
+  </div>
+
+  <!-- ZONA 1: Focos -->
+  <div class="focos-zone">
+    <div class="section-label">3 Focos do Dia</div>
+    <div class="focos-grid" id="focos-grid"></div>
+  </div>
+
+  <!-- COLS -->
+  <div class="main-cols">
+    <!-- Aprovações -->
+    <div>
+      <div class="section-header">
+        <h2>Aprovações WeAgents <span class="badge zero" id="apr-badge">0</span></h2>
+        <a class="ver-link" href="https://app.clickup.com" target="_blank">ClickUp →</a>
+      </div>
+      <div class="card" id="aprovacoes-container">
+        <div class="loading-row"><div class="spinner"></div> Carregando…</div>
+      </div>
+    </div>
+
+    <!-- Tarefas + Rotinas -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <div class="section-header">
+          <h2>Minhas Tarefas <span id="tarefas-count" style="font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0;text-transform:none;"></span></h2>
+          <a class="ver-link" href="https://app.clickup.com" target="_blank">ClickUp →</a>
+        </div>
+        <div class="card" id="tarefas-container">
+          <div class="loading-row"><div class="spinner"></div> Carregando…</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-header">
+          <h2>Rotinas do Dia</h2>
+          <a class="ver-link" id="edit-rotinas-btn" onclick="toggleEditRotinas()">Editar</a>
+        </div>
+        <div class="card">
+          <div class="rotinas-grid" id="rotinas-grid"></div>
+          <div id="rotinas-edit" style="display:none;margin-top:12px;">
+            <input id="new-rotina-input" type="text" placeholder="Nova rotina…"
+              style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-size:12px;outline:none;color:var(--text);"
+              onkeydown="if(event.key==='Enter')addRotina()">
+            <button class="btn-sm" onclick="addRotina()" style="margin-top:6px;width:100%;">+ Adicionar rotina</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDÁRIO -->
+  <div class="calendario-section">
+    <div class="cal-header">
+      <div class="section-header" style="margin-bottom:0;"><h2>Calendário</h2></div>
+      <div class="cal-tabs">
+        <button class="cal-tab active" onclick="switchCal('hoje',this)">Hoje</button>
+        <button class="cal-tab" onclick="switchCal('semana',this)">Semana</button>
+        <button class="cal-tab" onclick="switchCal('mes',this)">Mês</button>
+      </div>
+    </div>
+    <div id="cal-body"></div>
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════
+   CONSTANTES & HELPERS
+════════════════════════════════════ */
+var TODAY = new Date();
+var TODAY_KEY = TODAY.getFullYear()+'-'+pad(TODAY.getMonth()+1)+'-'+pad(TODAY.getDate());
+var API = 'https://api.clickup.com/api/v2';
+
+var REVISAR_LISTS = { WLC:'901327022292', WLB:'901327022294', WLH:'901327022296' };
+var WLH_COLOR = { WLC:'wlc', WLB:'wlb', WLH:'wlh' };
+
+function pad(n){ return n<10?'0'+n:''+n; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function $(id){ return document.getElementById(id); }
+function load(k,d){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }
+function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+
+function formatDate(d){
+  var dias=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  var meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  return dias[d.getDay()]+', '+d.getDate()+' de '+meses[d.getMonth()]+' de '+d.getFullYear();
+}
+function greet(){
+  var h=TODAY.getHours();
+  return h<12?'Bom dia, Laise ✨':h<18?'Boa tarde, Laise ✨':'Boa noite, Laise ✨';
+}
+
+/* ════════════════════════════════════
+   MODAL & TOKEN
+════════════════════════════════════ */
+function openModal(){ $('modal-overlay').classList.add('open'); $('token-input').focus(); }
+function closeModal(){ $('modal-overlay').classList.remove('open'); }
+function closeModalOutside(e){ if(e.target===$('modal-overlay'))closeModal(); }
+
+function saveToken(){
+  var t=$('token-input').value.trim();
+  if(!t){ $('token-input').focus(); return; }
+  save('wlp_token',t);
+  save('wlp_user',null); save('wlp_team',null); // limpa cache
+  closeModal();
+  $('setup-banner').style.display='none';
+  loadClickUp();
+}
+
+function getToken(){ return load('wlp_token',null); }
+
+/* ════════════════════════════════════
+   CLICKUP API
+════════════════════════════════════ */
+async function apiGet(path){
+  var token=getToken();
+  if(!token) throw new Error('no-token');
+  var r=await fetch(API+path,{headers:{Authorization:token}});
+  if(!r.ok){ var e=await r.json().catch(()=>{}); throw new Error((e&&e.err)||r.status); }
+  return r.json();
+}
+
+async function loadClickUp(){
+  var token=getToken();
+  if(!token){ showSetupBanner(); showEmptyAprovacoes(); showEmptyTarefas(); return; }
+
+  // user + team (cached)
+  var user=load('wlp_user',null);
+  var team=load('wlp_team',null);
+  try{
+    if(!user){ var ud=await apiGet('/user'); user=ud.user; save('wlp_user',user); }
+    if(!team){ var td=await apiGet('/team'); team=td.teams[0]; save('wlp_team',team); }
+  }catch(e){
+    if(e.message==='no-token'){ showSetupBanner(); return; }
+    // token inválido
+    save('wlp_token',null); save('wlp_user',null); save('wlp_team',null);
+    showSetupBanner();
+    showError('aprovacoes-container','Token inválido. Clique em ⚙️ para reconectar.');
+    showError('tarefas-container','Token inválido.');
+    return;
+  }
+
+  // paralelo
+  await Promise.all([
+    fetchAprovacoes(),
+    fetchTarefas(team.id, user.id)
+  ]);
+}
+
+function showSetupBanner(){ $('setup-banner').style.display='flex'; }
+
+function showError(id,msg){
+  $(id).innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div>'+esc(msg)+'</div>';
+}
+
+/* — Aprovações — */
+async function fetchAprovacoes(){
+  $('aprovacoes-container').innerHTML='<div class="loading-row"><div class="spinner"></div> Carregando aprovações…</div>';
+  var all=[];
+  for(var brand in REVISAR_LISTS){
+    try{
+      var data=await apiGet('/list/'+REVISAR_LISTS[brand]+'/task?subtasks=false&include_closed=false&order_by=created&reverse=true');
+      (data.tasks||[]).forEach(function(t){
+        var assignees=(t.assignees||[]).map(function(a){return a.username||a.email;}).join(', ');
+        var desc=t.description?t.description.replace(/\n/g,' ').substring(0,90):'';
+        all.push({
+          brand: brand.toLowerCase(),
+          title: t.name,
+          meta: desc || (assignees ? 'por '+assignees : 'WeAgent'),
+          link: t.url||'https://app.clickup.com'
+        });
+      });
+    }catch(e){ console.warn('Aprovações '+brand, e.message); }
+  }
+  renderAprovacoes(all);
+}
+
+function renderAprovacoes(items){
+  items=items||[];
+  var badge=$('apr-badge');
+  var container=$('aprovacoes-container');
+  if(!items.length){
+    badge.textContent='0'; badge.className='badge zero';
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div>Nenhuma aprovação pendente</div>';
+    return;
+  }
+  badge.textContent=items.length; badge.className='badge';
+  container.innerHTML='';
+  items.forEach(function(apr){
+    var el=document.createElement('div');
+    el.className='aprovacao-item';
+    el.innerHTML=
+      '<span class="apr-brand '+esc(apr.brand)+'">'+esc(apr.brand.toUpperCase())+'</span>'+
+      '<div class="apr-title">'+esc(apr.title)+'</div>'+
+      '<div class="apr-meta">'+esc(apr.meta)+'</div>'+
+      '<a class="apr-link" href="'+esc(apr.link)+'" target="_blank">Ver no ClickUp →</a>';
+    container.appendChild(el);
+  });
+}
+
+function showEmptyAprovacoes(){
+  $('apr-badge').textContent='0'; $('apr-badge').className='badge zero';
+  $('aprovacoes-container').innerHTML='<div class="empty-state"><div class="empty-icon">🔗</div>Conecte ao ClickUp para ver aprovações</div>';
+}
+
+/* — Tarefas — */
+async function fetchTarefas(teamId, userId){
+  $('tarefas-container').innerHTML='<div class="loading-row"><div class="spinner"></div> Carregando tarefas…</div>';
+  var today=new Date(); today.setHours(0,0,0,0);
+  var tomorrow=new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+
+  var tasks=[];
+  try{
+    // tarefas com due date hoje
+    var data=await apiGet(
+      '/team/'+teamId+'/task'+
+      '?assignees[]='+userId+
+      '&due_date_gt='+today.getTime()+
+      '&due_date_lt='+tomorrow.getTime()+
+      '&include_closed=false&subtasks=false&page=0'
+    );
+    tasks=tasks.concat(data.tasks||[]);
+  }catch(e){ console.warn('Tarefas hoje',e.message); }
+
+  try{
+    // tarefas atrasadas (sem filtro de due date, mas com status aberto)
+    var data2=await apiGet(
+      '/team/'+teamId+'/task'+
+      '?assignees[]='+userId+
+      '&due_date_lt='+today.getTime()+
+      '&include_closed=false&subtasks=false&page=0'
+    );
+    var atrasadas=(data2.tasks||[]).map(function(t){ t._overdue=true; return t; });
+    tasks=tasks.concat(atrasadas.slice(0,5)); // max 5 atrasadas
+  }catch(e){ console.warn('Tarefas atrasadas',e.message); }
+
+  renderTarefas(tasks);
+}
+
+function renderTarefas(tasks){
+  tasks=tasks||[];
+  var container=$('tarefas-container');
+  $('tarefas-count').textContent=tasks.length?'('+tasks.length+')':'';
+
+  if(!tasks.length){
+    container.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div>Nenhuma tarefa para hoje</div>';
+    return;
+  }
+
+  // agrupar por space
+  var groups={}, order=[];
+  tasks.forEach(function(t){
+    var g=(t.space&&t.space.name)||'Geral';
+    if(!groups[g]){ groups[g]=[]; order.push(g); }
+    groups[g].push(t);
+  });
+
+  container.innerHTML='';
+  order.forEach(function(g){
+    var lbl=document.createElement('div');
+    lbl.className='tarefa-group-label';
+    lbl.textContent=g;
+    container.appendChild(lbl);
+    groups[g].forEach(function(t){
+      var dueMs=t.due_date?parseInt(t.due_date):null;
+      var dueD=dueMs?new Date(dueMs):null;
+      var timeStr=dueD?(pad(dueD.getHours())+':'+pad(dueD.getMinutes())):'';
+      var done=t.status&&t.status.type==='closed';
+      var overdue=t._overdue&&!done;
+
+      var item=document.createElement('div');
+      item.className='tarefa-item'+(done?' done':'');
+      item.innerHTML=
+        '<div class="tarefa-check"></div>'+
+        '<div class="tarefa-body">'+
+          '<div class="tarefa-title">'+esc(t.name)+(overdue?' <span style="color:var(--accent);font-size:9px;font-weight:700;">• atrasada</span>':'')+
+          (t.url?'&nbsp;<a href="'+esc(t.url)+'" target="_blank" style="font-size:9px;color:var(--accent);text-decoration:none;" title="Abrir no ClickUp">↗</a>':'')+'</div>'+
+          (timeStr?'<div class="tarefa-time">'+esc(timeStr)+'</div>':'')+
+        '</div>';
+      var chk=item.querySelector('.tarefa-check');
+      chk.addEventListener('click',function(){
+        item.classList.toggle('done');
+      });
+      container.appendChild(item);
+    });
+  });
+}
+
+function showEmptyTarefas(){
+  $('tarefas-container').innerHTML='<div class="empty-state"><div class="empty-icon">🔗</div>Conecte ao ClickUp para ver tarefas</div>';
+}
+
+/* ════════════════════════════════════
+   FOCOS DO DIA
+════════════════════════════════════ */
+var PLACEHOLDERS=['Qual é o foco principal de hoje?','Segundo objetivo do dia…','Terceiro foco do dia…'];
+
+function loadFocos(){
+  var s=load('wlp_focos',null);
+  if(!s||s.date!==TODAY_KEY){
+    var prev=s?s.items:[];
+    return{date:TODAY_KEY,items:[0,1,2].map(function(i){return{text:(prev[i]||{}).text||'',done:false};})};
+  }
+  return s;
+}
+function saveFocos(d){ save('wlp_focos',d); }
+
+function renderFocos(){
+  var data=loadFocos();
+  var grid=$('focos-grid'); grid.innerHTML='';
+  data.items.forEach(function(foco,i){
+    var card=document.createElement('div');
+    card.className='foco-card'+(foco.done?' done':'');
+    card.innerHTML=
+      '<div class="foco-num">0'+(i+1)+'</div>'+
+      '<div class="foco-text" contenteditable="true" data-placeholder="'+esc(PLACEHOLDERS[i])+'">'+esc(foco.text)+'</div>'+
+      '<div class="foco-footer">'+
+        '<button class="foco-check-btn">'+(foco.done?'✓ Concluído':'○ Marcar como feito')+'</button>'+
+      '</div>';
+    grid.appendChild(card);
+    card.querySelector('.foco-text').addEventListener('input',function(e){
+      var d=loadFocos(); d.items[i].text=e.target.innerText.trim(); saveFocos(d);
+    });
+    card.querySelector('.foco-check-btn').addEventListener('click',function(){
+      var d=loadFocos(); d.items[i].done=!d.items[i].done; saveFocos(d); renderFocos();
+    });
+  });
+}
+function resetFocos(){
+  if(!confirm('Limpar os 3 focos do dia?'))return;
+  save('wlp_focos',{date:TODAY_KEY,items:[{text:'',done:false},{text:'',done:false},{text:'',done:false}]});
+  renderFocos();
+}
+
+/* ════════════════════════════════════
+   ROTINAS DO DIA
+════════════════════════════════════ */
+var DEFAULT_ROTINAS=[
+  {icon:'💧',name:'Água 8 copos'},{icon:'🏃',name:'Exercício'},
+  {icon:'📖',name:'Leitura 20min'},{icon:'🌿',name:'Skincare'},{icon:'🧘',name:'Meditação'},
+];
+
+function loadRotinasCfg(){ return load('wlp_rot_cfg',DEFAULT_ROTINAS); }
+function saveRotinasCfg(c){ save('wlp_rot_cfg',c); }
+function loadRotinaState(){
+  var s=load('wlp_rotinas',null);
+  if(!s||s.date!==TODAY_KEY){
+    var cfg=loadRotinasCfg(); var items={};
+    cfg.forEach(function(r){items[r.name]=false;});
+    return{date:TODAY_KEY,items:items};
+  }
+  return s;
+}
+function saveRotinaState(s){ save('wlp_rotinas',s); }
+
+function renderRotinas(){
+  var cfg=loadRotinasCfg(); var state=loadRotinaState();
+  var grid=$('rotinas-grid'); grid.innerHTML='';
+  cfg.forEach(function(r){
+    var done=!!state.items[r.name];
+    var chip=document.createElement('div');
+    chip.className='rotina-chip'+(done?' done':'');
+    chip.innerHTML='<span class="chip-check">✓</span>'+(done?'':r.icon+' ')+r.name;
+    chip.addEventListener('click',function(){
+      var s=loadRotinaState(); s.items[r.name]=!s.items[r.name]; saveRotinaState(s); renderRotinas();
+    });
+    grid.appendChild(chip);
+  });
+}
+function resetRotinas(){
+  var cfg=loadRotinasCfg(); var items={};
+  cfg.forEach(function(r){items[r.name]=false;});
+  saveRotinaState({date:TODAY_KEY,items:items}); renderRotinas();
+}
+var rotinaEditOpen=false;
+function toggleEditRotinas(){
+  rotinaEditOpen=!rotinaEditOpen;
+  $('rotinas-edit').style.display=rotinaEditOpen?'block':'none';
+  $('edit-rotinas-btn').textContent=rotinaEditOpen?'Fechar':'Editar';
+}
+function addRotina(){
+  var input=$('new-rotina-input'); var name=input.value.trim();
+  if(!name)return;
+  var cfg=loadRotinasCfg(); cfg.push({icon:'⭐',name:name}); saveRotinasCfg(cfg);
+  input.value=''; renderRotinas();
+}
+
+/* ════════════════════════════════════
+   CALENDÁRIO
+════════════════════════════════════ */
+var CAL_VIEW='hoje';
+var EVENTOS=[
+  {hour:9,label:'Gravação WLC',type:'accent'},
+  {hour:11,label:'Aprovações WeAgents (11h–11h45)',type:'mustard'},
+];
+
+function renderCalHoje(){
+  var s=[];
+  for(var h=7;h<=20;h++){
+    var ev=EVENTOS.find(function(e){return e.hour===h;});
+    s.push('<div class="cal-slot">'+
+      '<div class="cal-time">'+pad(h)+':00</div>'+
+      (ev?'<div class="cal-event-area"><div class="cal-event '+ev.type+'">'+esc(ev.label)+'</div></div>':
+          '<div class="cal-event-area free">— livre</div>')+
+    '</div>');
+  }
+  return '<div class="cal-day">'+s.join('')+'</div>';
+}
+
+function renderCalSemana(){
+  var nomes=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  var dow=TODAY.getDay();
+  var start=new Date(TODAY); start.setDate(TODAY.getDate()-dow);
+  var html='<div class="cal-week">';
+  for(var i=0;i<7;i++){
+    var d=new Date(start); d.setDate(start.getDate()+i);
+    var isToday=d.toDateString()===TODAY.toDateString();
+    html+='<div class="week-day'+(isToday?' today':'')+'">'+
+      '<div class="week-day-label">'+nomes[i]+'</div>'+
+      '<div class="week-day-num">'+d.getDate()+'</div>'+
+      (isToday?'<span class="week-event-dot"></span><span class="week-event-dot"></span>':'')+
+    '</div>';
+  }
+  return html+'</div>';
+}
+
+function renderCalMes(){
+  var y=TODAY.getFullYear(),m=TODAY.getMonth();
+  var meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  var fd=new Date(y,m,1).getDay();
+  var dim=new Date(y,m+1,0).getDate();
+  var dip=new Date(y,m,0).getDate();
+  var html='<div style="font-size:12px;font-weight:800;color:var(--text2);margin-bottom:8px;">'+meses[m]+' '+y+'</div>'+
+    '<div class="cal-month">';
+  dias.forEach(function(d){html+='<div class="month-header">'+d+'</div>';});
+  for(var i=fd-1;i>=0;i--) html+='<div class="month-day other-month">'+(dip-i)+'</div>';
+  for(var d2=1;d2<=dim;d2++){
+    var isToday2=d2===TODAY.getDate();
+    html+='<div class="month-day'+(isToday2?' today':'')+'">'+d2+(isToday2?'<div class="month-event">Gravação WLC</div>':'')+' </div>';
+  }
+  var total=fd+dim; var rem=(7-(total%7))%7;
+  for(var n=1;n<=rem;n++) html+='<div class="month-day other-month">'+n+'</div>';
+  return html+'</div>';
+}
+
+function renderCal(){
+  var b=$('cal-body');
+  if(CAL_VIEW==='hoje')   b.innerHTML=renderCalHoje();
+  if(CAL_VIEW==='semana') b.innerHTML=renderCalSemana();
+  if(CAL_VIEW==='mes')    b.innerHTML=renderCalMes();
+}
+function switchCal(view,btn){
+  CAL_VIEW=view;
+  document.querySelectorAll('.cal-tab').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active'); renderCal();
+}
+
+/* ════════════════════════════════════
+   INIT
+════════════════════════════════════ */
+// hash setup: #t=TOKEN inicializa o token e limpa a URL
+(function(){
+  var h=location.hash;
+  if(h && h.indexOf('t=')!==-1){
+    var m=h.match(/[#&]t=([^&]+)/);
+    if(m && m[1]){ save('wlp_token',m[1]); save('wlp_user',null); save('wlp_team',null); }
+    history.replaceState(null,'',location.pathname+location.search);
+  }
+})();
+
+$('greeting-text').textContent=greet();
+$('date-text').textContent=formatDate(TODAY);
+renderFocos();
+renderRotinas();
+renderCal();
+loadClickUp();
+</script>
+</body>
+</html>
