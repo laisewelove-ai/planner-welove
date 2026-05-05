@@ -497,6 +497,8 @@
         document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
         $('panel-'+tab).classList.add('active');
 
+        $('sidebar').style.display = tab==='planner' ? 'flex' : 'none';
+
         if(tab!=='planner' && !iframeLoaded[tab]){
           iframeLoaded[tab]=true;
           var iframe=$('frame-'+tab);
