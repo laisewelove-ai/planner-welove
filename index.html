@@ -359,36 +359,8 @@
     <!-- ─── SIDEBAR ──────────────────────────────────────── -->
     <aside id="sidebar">
 
-      <!-- Focos do Dia -->
-      <div class="sb-section">
-        <div class="sb-label">3 Focos do Dia</div>
-        <div id="focos-list"></div>
-      </div>
-
-      <!-- Rotinas -->
-      <div class="sb-section">
-        <div class="sb-label">Rotinas</div>
-        <div class="rotinas-wrap" id="rotinas-wrap"></div>
-      </div>
-
-      <!-- Aprovações WeAgents -->
-      <div class="sb-section">
-        <div class="sb-label">
-          Aprovações WeAgents
-          <span class="sb-badge" id="aprv-badge"></span>
-        </div>
-        <div id="aprv-list"><div class="cu-loading">Aguardando ClickUp…</div></div>
-      </div>
-
-      <!-- Tarefas do Dia -->
-      <div class="sb-section">
-        <div class="sb-label">Tarefas do Dia</div>
-        <div id="tarefas-list"><div class="cu-loading">Aguardando ClickUp…</div></div>
-      </div>
-
       <!-- Ferramentas -->
       <div class="sb-section">
-        <div class="sb-label">Ferramentas</div>
         <button class="sb-tool-btn" onclick="openTool('maquina','Máquina de Conteúdos','https://maquinadeconteudos47.netlify.app')" id="tool-btn-maquina">
           <span class="sb-tool-icon">⚙️</span><span class="sb-tool-name">Máquina de Conteúdos</span><span class="sb-tool-arr">→</span>
         </button>
@@ -647,30 +619,7 @@
 
     function renderFocos(){
       var data=loadFocos();
-      var el=$('focos-list'); el.innerHTML='';
       updateKpiFocos(data);
-      [0,1,2].forEach(function(i){
-        var wrap=document.createElement('div');
-        wrap.className='foco-item'+(data.done[i]?' done':'');
-
-        var num=document.createElement('span'); num.className='foco-num'; num.textContent='0'+(i+1);
-
-        var txt=document.createElement('div');
-        txt.className='foco-text'; txt.contentEditable='true';
-        txt.setAttribute('data-ph',FOCOS_PH[i]); txt.textContent=data.texts[i]||'';
-        txt.addEventListener('blur',function(){ data.texts[i]=txt.textContent.trim(); save('wlp_focos',data); });
-
-        var chk=document.createElement('input');
-        chk.type='checkbox'; chk.className='foco-check'; chk.checked=data.done[i];
-        chk.addEventListener('change',function(){
-          data.done[i]=chk.checked; save('wlp_focos',data);
-          wrap.className='foco-item'+(chk.checked?' done':'');
-          updateKpiFocos(data);
-        });
-
-        wrap.appendChild(num); wrap.appendChild(txt); wrap.appendChild(chk);
-        el.appendChild(wrap);
-      });
     }
 
     /* ══════════════════════════════════════
@@ -693,19 +642,7 @@
     function renderRotinas(){
       var cfg=load('wlp_rot_cfg',DEFAULT_ROT);
       var state=loadRotState();
-      var wrap=$('rotinas-wrap'); wrap.innerHTML='';
       updateKpiRotinas(cfg,state);
-      cfg.forEach(function(name){
-        var chip=document.createElement('div');
-        chip.className='rotina-chip'+(state.done[name]?' done':'');
-        chip.textContent=name;
-        chip.addEventListener('click',function(){
-          state.done[name]=!state.done[name]; save('wlp_rotinas',state);
-          chip.className='rotina-chip'+(state.done[name]?' done':'');
-          updateKpiRotinas(cfg,state);
-        });
-        wrap.appendChild(chip);
-      });
     }
 
     /* ══════════════════════════════════════
@@ -721,8 +658,6 @@
     async function initClickUp(){
       if(!getToken()){
         $('cu-status').textContent='ClickUp não conectado';
-        $('aprv-list').innerHTML='<div class="cu-placeholder">Clique em ⚙️ para conectar</div>';
-        $('tarefas-list').innerHTML='<div class="cu-placeholder">Clique em ⚙️ para conectar</div>';
         return;
       }
       try{
@@ -736,8 +671,6 @@
         if(err.message==='no-token') return;
         save('wlp_token',null); save('wlp_user',null); save('wlp_team',null);
         $('cu-status').textContent='Token inválido — ⚙️ reconectar';
-        $('aprv-list').innerHTML='<div class="cu-placeholder">Token inválido</div>';
-        $('tarefas-list').innerHTML='<div class="cu-placeholder">Token inválido</div>';
       }
     }
 
@@ -750,25 +683,8 @@
           (d.tasks||[]).forEach(function(t){ all.push({brand:brand,name:t.name}); });
         }catch(e){}
       }
-      var badge=$('aprv-badge');
-      if(all.length){ badge.textContent=all.length; badge.style.display='inline'; }
-      else { badge.style.display='none'; }
-
       /* KPI */
       var kv=$('kpi-aprv'); if(kv) kv.textContent=all.length||'0';
-
-      /* Sidebar */
-      var el=$('aprv-list');
-      if(!all.length){ el.innerHTML='<div class="cu-placeholder">Nenhuma aprovação pendente ✓</div>'; }
-      else {
-        el.innerHTML='';
-        all.slice(0,6).forEach(function(item){
-          var div=document.createElement('div'); div.className='cu-item';
-          div.innerHTML='<div class="cu-brand">'+esc(item.brand)+'</div><div class="cu-name">'+esc(item.name)+'</div>';
-          el.appendChild(div);
-        });
-        if(all.length>6){ var m=document.createElement('div'); m.className='cu-placeholder'; m.textContent='+'+(all.length-6)+' mais'; el.appendChild(m); }
-      }
 
       /* Card principal */
       var cc=$('cc-aprv-list');
@@ -796,18 +712,6 @@
         /* KPI */
         var kv=$('kpi-tarefas'); if(kv) kv.textContent=tasks.length||'0';
 
-        /* Sidebar */
-        var el=$('tarefas-list');
-        if(!tasks.length){ el.innerHTML='<div class="cu-placeholder">Sem tarefas hoje ✓</div>'; }
-        else {
-          el.innerHTML='';
-          tasks.slice(0,5).forEach(function(t){
-            var div=document.createElement('div'); div.className='cu-item';
-            div.innerHTML='<div class="cu-name">'+esc(t.name)+'</div>';
-            el.appendChild(div);
-          });
-        }
-
         /* Card principal */
         var cc=$('cc-tarefas-list');
         if(cc){
@@ -823,7 +727,6 @@
           }
         }
       }catch(err){
-        $('tarefas-list').innerHTML='<div class="cu-placeholder">Erro ao carregar tarefas</div>';
         var cc=$('cc-tarefas-list'); if(cc) cc.innerHTML='<div class="cc-empty">Erro ao carregar tarefas</div>';
       }
     }
