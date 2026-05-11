@@ -719,6 +719,236 @@
   .priority-group-title.medium { background: rgba(74,144,217,0.12); color: var(--blue); }
   .priority-group-title.later { background: rgba(158,155,184,0.12); color: var(--text-muted); }
 
+  /* COFRE — LAYOUT TIMELINE (estilo Relatórios) */
+  .cofre-timeline-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 24px 0 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .cofre-tl-nav {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s;
+    padding: 6px 10px;
+  }
+  .cofre-tl-nav:hover { color: var(--text); }
+  .cofre-tl-nav.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+  .cofre-tl-current {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--red);
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .cofre-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+  .cofre-summary-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 24px;
+    font-weight: 600;
+  }
+  .cofre-summary-pill.green { background: rgba(76,175,80,0.12); color: var(--green); }
+  .cofre-summary-pill.orange { background: rgba(245,166,35,0.12); color: var(--orange); }
+  .cofre-summary-pill.gray { background: rgba(158,155,184,0.15); color: var(--text-muted); }
+
+  .cofre-period {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 10px var(--shadow);
+    position: relative;
+  }
+  .cofre-period-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .cofre-period-tag {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 6px 6px 0 0;
+    position: absolute;
+    top: -14px;
+    left: 22px;
+  }
+  .cofre-period-tag.green { background: var(--green); }
+  .cofre-period-tag.orange { background: var(--orange); }
+  .cofre-period-tag.blue { background: var(--blue); }
+  .cofre-period-tag.gray { background: var(--text-muted); }
+
+  .cofre-period-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .cofre-period-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .cofre-period-badge {
+    background: rgba(76,175,80,0.12);
+    color: var(--green);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cofre-period-badge.partial { background: rgba(245,166,35,0.12); color: var(--orange); }
+  .cofre-period-badge.empty { background: rgba(158,155,184,0.15); color: var(--text-muted); }
+
+  .cofre-dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .cofre-dept {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px 22px;
+    position: relative;
+  }
+  [data-theme="light"] .cofre-dept { background: #FDFAF4; }
+  .cofre-dept-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 5px 5px 0 0;
+    position: absolute;
+    top: -12px;
+    left: 16px;
+    color: #fff;
+  }
+  .cofre-dept-tag.constbr { background: #C0533A; }
+  .cofre-dept-tag.constcl { background: #C77A0F; }
+  .cofre-dept-tag.finbr { background: #4A8B43; }
+  .cofre-dept-tag.fincl { background: #C77A0F; }
+  .cofre-dept-tag.fiscalbr { background: #2E6FA8; }
+  .cofre-dept-tag.fiscalcl { background: #6B5B95; }
+  .cofre-dept-tag.rhbr { background: #C0533A; }
+  .cofre-dept-tag.rhcl { background: #C77A0F; }
+  .cofre-dept-tag.contratos { background: #4A8B43; }
+  .cofre-dept-tag.seguros { background: #6B5B95; }
+  .cofre-dept-tag.juridico { background: #2A2640; }
+  .cofre-dept-tag.provas { background: #C0533A; }
+
+  .cofre-dept-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+  .cofre-dept-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .cofre-doc-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+  .cofre-doc-line:hover { background: var(--hover-bg); }
+  .cofre-doc-line.filled .cdl-name { color: var(--text); }
+  .cofre-doc-line .cdl-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .cofre-doc-line .cdl-name {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .cofre-doc-line .cdl-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .cofre-doc-line.filled .cdl-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .cofre-doc-line.filled .cdl-check::after { content: '✓'; font-size: 12px; font-weight: 700; }
+  .cofre-doc-line.dragover {
+    background: rgba(74,144,217,0.1);
+    outline: 2px dashed var(--blue);
+  }
+
+  .cofre-doc-tags {
+    display: flex;
+    gap: 3px;
+  }
+  .cofre-doc-tag {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .cofre-doc-tag.P1 { background: rgba(245,166,35,0.18); color: var(--orange); }
+  .cofre-doc-tag.P2 { background: rgba(229,83,83,0.18); color: var(--red); }
+  .cofre-doc-tag.P3 { background: rgba(74,144,217,0.18); color: var(--blue); }
+
+  /* hide old layout when new is rendered */
+  .cofre-old-layout { display: none; }
+
   /* COFRE DE DOCUMENTOS */
   .cofre-warning {
     background: rgba(74,144,217,0.08);
@@ -1574,14 +1804,12 @@
   <div style="background: #2A2640; border: 1px solid #3D3960; border-radius: 16px; padding: 40px; width: 380px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
     <div style="font-size: 48px; margin-bottom: 14px;">🔒</div>
     <h2 style="color: #F0EDE8; font-size: 22px; margin-bottom: 8px;">Central de Contabilidade</h2>
-    <p style="color: #9E9BB8; font-size: 13.5px; margin-bottom: 28px;">Acesso restrito · digite a senha pra continuar</p>
+    <p style="color: #9E9BB8; font-size: 13.5px; margin-bottom: 28px;">Acesso restrito · digite a senha</p>
     <input type="password" id="gate-input" placeholder="Senha" autofocus
            style="width: 100%; padding: 13px 16px; background: #1E1B2E; border: 1px solid #3D3960; border-radius: 8px; color: #F0EDE8; font-size: 14px; font-family: inherit; margin-bottom: 14px; outline: none;"
            onkeydown="if(event.key==='Enter') checkGate()">
     <button onclick="checkGate()"
-            style="width: 100%; padding: 13px; background: #4A90D9; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s;"
-            onmouseover="this.style.background='#2E6FA8'"
-            onmouseout="this.style.background='#4A90D9'">
+            style="width: 100%; padding: 13px; background: #4A90D9; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;">
       Entrar
     </button>
     <div id="gate-error" style="color: #E55353; font-size: 12.5px; margin-top: 14px; opacity: 0; transition: opacity 0.2s;">Senha incorreta.</div>
@@ -3085,259 +3313,41 @@ Obrigada! 🙏</div>
   <!-- ============ COFRE DE DOCUMENTOS ============ -->
   <div id="cofre" class="section">
     <div class="section-tag">Inventário oficial</div>
-    <h2>🔐 Cofre de Documentos — WLC Brasil + Chile</h2>
-    <p style="margin-bottom: 22px;">Organizado por <strong>ano</strong> e dentro de cada ano por <strong>departamento</strong>. Os documentos perenes (contrato social, RUT, alvarás, contratos comerciais) ficam no topo.</p>
+    <h2>🔐 Cofre de Documentos</h2>
+    <p style="margin-bottom: 22px;">Tudo que você deveria ter sob controle sobre WLC Brasil + Chile, organizado por <strong>ano</strong>. Navegue entre os períodos no topo.</p>
 
     <div class="cofre-warning" id="storage-status">
-      💾 <strong>Armazenamento:</strong> os arquivos vão direto pra pasta <code style="background: rgba(0,0,0,0.2); padding: 1px 5px; border-radius: 3px;">iCloud/PKA/Away/Contabilidade/cofre/</code> — sincronizado, com backup automático da Apple, acessível pelo Finder. <button id="connect-folder-btn" onclick="connectCofreFolder()" style="margin-left: 12px; background: var(--blue); color: #fff; border: none; padding: 5px 12px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer;">🔗 Conectar pasta</button>
-    </div>
-
-    <div class="cofre-progress">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 13px; font-weight: 600; color: var(--text);">Progresso do cofre</span>
-        <span id="cofre-progress-label" style="font-size: 13px; font-weight: 700; color: var(--blue);">0 de 0 documentos</span>
-      </div>
-      <div class="cofre-progress-bar"><div class="cofre-progress-fill" id="cofre-progress-fill" style="width: 0%"></div></div>
+      💾 <strong>Armazenamento:</strong> arquivos salvos na pasta <code style="background: rgba(0,0,0,0.2); padding: 1px 5px; border-radius: 3px;">iCloud/PKA/Away/Contabilidade/cofre/</code>. <button id="connect-folder-btn" onclick="connectCofreFolder()" style="margin-left: 12px; background: var(--blue); color: #fff; border: none; padding: 5px 12px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer;">🔗 Conectar pasta</button>
     </div>
 
     <!-- FILTRO POR PROBLEMA -->
     <div class="tag-filter">
-      <span class="tag-filter-label">🏷️ Filtrar por problema:</span>
+      <span class="tag-filter-label">🏷️ Filtrar:</span>
       <button class="active" onclick="filterByTag('ALL', this)">Todos</button>
-      <button onclick="filterByTag('P1', this)" style="border-color: var(--orange); color: var(--orange);">🟠 P1 · DARFs Alisson</button>
-      <button onclick="filterByTag('P2', this)" style="border-color: var(--red); color: var(--red);">🔴 P2 · R$4M na PF</button>
-      <button onclick="filterByTag('P3', this)" style="border-color: var(--blue); color: var(--blue);">🔵 P3 · Contabilidade Chile</button>
+      <button onclick="filterByTag('P1', this)" style="border-color: var(--orange); color: var(--orange);">🟠 P1 · DARFs</button>
+      <button onclick="filterByTag('P2', this)" style="border-color: var(--red); color: var(--red);">🔴 P2 · R$4M</button>
+      <button onclick="filterByTag('P3', this)" style="border-color: var(--blue); color: var(--blue);">🔵 P3 · Chile</button>
     </div>
 
-    <!-- DOCUMENTOS PERENES -->
-    <div class="cofre-category perenes">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">📌</div>
-        <div class="ccb-info">
-          <div class="ccb-title">Documentos Perenes</div>
-          <div class="ccb-sub">Sem ano específico — constituição, contratos, políticas, seguros</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="perenes">0/22</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-
-      <div class="cofre-subcategory">🇧🇷 Constituição</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-contrato-social" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-alteracao-contratual" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-cnpj-cartao" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-inscricao-estadual" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-inscricao-municipal" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-alvara" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="br-cadastur" data-cat="perenes"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 Constituição</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-escritura-constitucion" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="cl-rut" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="cl-iniciacion-actividades" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="cl-patente-comercial" data-cat="perenes"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">📑 Contratos Comerciais</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="contrato-br-cl" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="contratos-fornecedores" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="contratos-guias" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="contrato-aluguel" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="termos-uso-site" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="politica-privacidade" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="condicoes-cancelamento" data-cat="perenes"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🛡️ Seguros e Apólices</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="seguro-rc-brasil" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="seguro-rc-chile" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="seguro-alisson" data-cat="perenes"></div>
-        <div class="cofre-slot empty" data-slot="seguro-operacional-turismo" data-cat="perenes"></div>
-      </div>
-      </div>
+    <!-- TIMELINE HEADER -->
+    <div class="cofre-timeline-header">
+      <button class="cofre-tl-nav" id="tl-prev" onclick="navCofre(-1)">← Anterior</button>
+      <div class="cofre-tl-current" id="tl-current">2024</div>
+      <button class="cofre-tl-nav" id="tl-next" onclick="navCofre(1)">Próximo →</button>
     </div>
 
-    <!-- 2022 -->
-    <div class="cofre-category collapsed">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">📅</div>
-        <div class="ccb-info">
-          <div class="ccb-title">2022</div>
-          <div class="ccb-sub">Início das operações</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="ano-2022">0/1</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-        <div class="cofre-subcategory">🇧🇷 Financeiro</div>
-        <div class="cofre-grid">
-          <div class="cofre-slot empty" data-slot="br-extratos-2022" data-cat="ano-2022"></div>
-        </div>
-      </div>
+    <div class="cofre-summary" id="cofre-summary"></div>
+
+    <!-- Container do período atual -->
+    <div id="cofre-period-render"></div>
+
+    <!-- Atalhos rápidos pra outros períodos -->
+    <div style="margin-top: 28px; text-align: center; color: var(--text-muted); font-size: 12px;">
+      <span style="font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 12px;">Ir para:</span>
+      <span id="cofre-shortcuts"></span>
     </div>
-
-    <!-- 2023 -->
-    <div class="cofre-category collapsed">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">📅</div>
-        <div class="ccb-info">
-          <div class="ccb-title">2023</div>
-          <div class="ccb-sub">Patrimônio inicial R$1,49M</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="ano-2023">0/1</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-        <div class="cofre-subcategory">🇧🇷 Financeiro</div>
-        <div class="cofre-grid">
-          <div class="cofre-slot empty" data-slot="br-extratos-2023" data-cat="ano-2023"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2024 — ANO CRÍTICO -->
-    <div class="cofre-category ano-critico">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">🔥</div>
-        <div class="ccb-info">
-          <div class="ccb-title">2024 — Ano Crítico (R$4M)</div>
-          <div class="ccb-sub">Ano fiscal central do Problema 2 · patrimônio +R$4,17M</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="ano-2024">0/9</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-
-      <div class="cofre-subcategory">🇧🇷 Financeiro</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-extratos-2024" data-cat="ano-2024"></div>
-        <div class="cofre-slot empty" data-slot="br-balanco-2024" data-cat="ano-2024"></div>
-        <div class="cofre-slot empty" data-slot="br-dre-2024" data-cat="ano-2024"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇧🇷 Fiscal</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-ecf-2024" data-cat="ano-2024"></div>
-        <div class="cofre-slot empty" data-slot="br-defis-2024" data-cat="ano-2024"></div>
-        <div class="cofre-slot empty" data-slot="br-nfs-emitidas-2024" data-cat="ano-2024"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 Financeiro</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-estados-cuenta-2024" data-cat="ano-2024"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 Fiscal</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-f22-2024" data-cat="ano-2024"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">📋 Provas/Evidências</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="print-irpf-2024" data-cat="ano-2024"></div>
-      </div>
-      </div>
-    </div>
-
-    <!-- 2025 -->
-    <div class="cofre-category collapsed">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">📅</div>
-        <div class="ccb-info">
-          <div class="ccb-title">2025</div>
-          <div class="ccb-sub">Exercício atual · contabilidade em fechamento</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="ano-2025">0/8</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-
-      <div class="cofre-subcategory">🇧🇷 Financeiro</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-extratos-2025" data-cat="ano-2025"></div>
-        <div class="cofre-slot empty" data-slot="br-balanco-2025" data-cat="ano-2025"></div>
-        <div class="cofre-slot empty" data-slot="br-dre-2025" data-cat="ano-2025"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇧🇷 Fiscal</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-nfs-emitidas-2025" data-cat="ano-2025"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 Financeiro</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-estados-cuenta-2025" data-cat="ano-2025"></div>
-        <div class="cofre-slot empty" data-slot="cl-balance-general" data-cat="ano-2025"></div>
-        <div class="cofre-slot empty" data-slot="cl-estado-resultado" data-cat="ano-2025"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇧🇷 RH</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-folha-pagamento" data-cat="ano-2025"></div>
-      </div>
-      </div>
-    </div>
-
-    <!-- 2026 -->
-    <div class="cofre-category">
-      <div class="cofre-category-banner" onclick="toggleCategory(this)">
-        <div class="ccb-icon">📅</div>
-        <div class="ccb-info">
-          <div class="ccb-title">2026 (em curso)</div>
-          <div class="ccb-sub">Documentos e ações em curso · certidões renováveis</div>
-        </div>
-        <span class="ccb-count cct-count" data-cat="ano-2026">0/17</span>
-        <span class="ccb-toggle">▼</span>
-      </div>
-      <div class="cofre-cat-body">
-
-      <div class="cofre-subcategory">🇧🇷 Fiscal (certidões válidas 180 dias)</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-cnd-federal" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-cnd-estadual" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-cnd-municipal" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-cnd-trabalhista" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-darfs-comprovantes" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-pgfn-13462844" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-pgfn-13462845" data-cat="ano-2026"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 Fiscal</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-carpeta-tributaria" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="cl-certificado-vigencia" data-cat="ano-2026"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇧🇷 RH</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="br-contratos-trabalho" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-esocial" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="br-organograma" data-cat="ano-2026"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">🇨🇱 RH</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="cl-contratos-trabajo" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="cl-contrato-rebeca" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="cl-liquidaciones" data-cat="ano-2026"></div>
-      </div>
-
-      <div class="cofre-subcategory" style="margin-top: 16px;">⚖️ Jurídico (ações em curso)</div>
-      <div class="cofre-grid">
-        <div class="cofre-slot empty" data-slot="confissao-alisson" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="procuracoes" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="notificacoes-extrajudiciais" data-cat="ano-2026"></div>
-        <div class="cofre-slot empty" data-slot="processos-judiciais" data-cat="ano-2026"></div>
-      </div>
-      </div>
-    </div>
-
   </div>
+
 
 </main>
 
@@ -4308,47 +4318,238 @@ Obrigada! 🙏</div>
     return '<div class="cs-tags">' + problems.map(p => `<span class="cs-tag ${p}">${p}</span>`).join('') + '</div>';
   }
 
+  // ============ NEW COFRE LAYOUT (timeline style) ============
+  const COFRE_STRUCTURE = [
+    {
+      key: 'perenes',
+      label: 'PERENES',
+      subtitle: 'Documentos sem ano específico — constituição, contratos, políticas, seguros',
+      tagColor: 'green',
+      depts: [
+        { name: 'Constituição', flag: '🇧🇷', tag: 'constbr', slots: ['br-contrato-social','br-alteracao-contratual','br-cnpj-cartao','br-inscricao-estadual','br-inscricao-municipal','br-alvara','br-cadastur'] },
+        { name: 'Constituição', flag: '🇨🇱', tag: 'constcl', slots: ['cl-escritura-constitucion','cl-rut','cl-iniciacion-actividades','cl-patente-comercial'] },
+        { name: 'Contratos Comerciais', flag: '📑', tag: 'contratos', slots: ['contrato-br-cl','contratos-fornecedores','contratos-guias','contrato-aluguel','termos-uso-site','politica-privacidade','condicoes-cancelamento'] },
+        { name: 'Seguros e Apólices', flag: '🛡️', tag: 'seguros', slots: ['seguro-rc-brasil','seguro-rc-chile','seguro-alisson','seguro-operacional-turismo'] }
+      ]
+    },
+    {
+      key: 'ano-2022',
+      label: '2022',
+      subtitle: 'Início das operações · ano da contratação do Alisson',
+      tagColor: 'gray',
+      depts: [
+        { name: 'Financeiro', flag: '🇧🇷', tag: 'finbr', slots: ['br-extratos-2022'] }
+      ]
+    },
+    {
+      key: 'ano-2023',
+      label: '2023',
+      subtitle: 'Patrimônio inicial R$1,49M',
+      tagColor: 'gray',
+      depts: [
+        { name: 'Financeiro', flag: '🇧🇷', tag: 'finbr', slots: ['br-extratos-2023'] }
+      ]
+    },
+    {
+      key: 'ano-2024',
+      label: '2024',
+      subtitle: 'Ano crítico · Problema 2 (R$4M) · patrimônio +R$4,17M',
+      tagColor: 'orange',
+      depts: [
+        { name: 'Financeiro', flag: '🇧🇷', tag: 'finbr', slots: ['br-extratos-2024','br-balanco-2024','br-dre-2024'] },
+        { name: 'Fiscal', flag: '🇧🇷', tag: 'fiscalbr', slots: ['br-ecf-2024','br-defis-2024','br-nfs-emitidas-2024'] },
+        { name: 'Financeiro', flag: '🇨🇱', tag: 'fincl', slots: ['cl-estados-cuenta-2024'] },
+        { name: 'Fiscal', flag: '🇨🇱', tag: 'fiscalcl', slots: ['cl-f22-2024'] },
+        { name: 'Provas e Evidências', flag: '📋', tag: 'provas', slots: ['print-irpf-2024'] }
+      ]
+    },
+    {
+      key: 'ano-2025',
+      label: '2025',
+      subtitle: 'Exercício atual · contabilidade em fechamento',
+      tagColor: 'blue',
+      depts: [
+        { name: 'Financeiro', flag: '🇧🇷', tag: 'finbr', slots: ['br-extratos-2025','br-balanco-2025','br-dre-2025'] },
+        { name: 'Fiscal', flag: '🇧🇷', tag: 'fiscalbr', slots: ['br-nfs-emitidas-2025'] },
+        { name: 'Financeiro', flag: '🇨🇱', tag: 'fincl', slots: ['cl-estados-cuenta-2025','cl-balance-general','cl-estado-resultado'] },
+        { name: 'RH', flag: '🇧🇷', tag: 'rhbr', slots: ['br-folha-pagamento'] }
+      ]
+    },
+    {
+      key: 'ano-2026',
+      label: '2026',
+      subtitle: 'Em curso · certidões renováveis e ações jurídicas',
+      tagColor: 'green',
+      depts: [
+        { name: 'Fiscal · Certidões', flag: '🇧🇷', tag: 'fiscalbr', slots: ['br-cnd-federal','br-cnd-estadual','br-cnd-municipal','br-cnd-trabalhista','br-darfs-comprovantes','br-pgfn-13462844','br-pgfn-13462845'] },
+        { name: 'Fiscal', flag: '🇨🇱', tag: 'fiscalcl', slots: ['cl-carpeta-tributaria','cl-certificado-vigencia'] },
+        { name: 'RH', flag: '🇧🇷', tag: 'rhbr', slots: ['br-contratos-trabalho','br-esocial','br-organograma'] },
+        { name: 'RH', flag: '🇨🇱', tag: 'rhcl', slots: ['cl-contratos-trabajo','cl-contrato-rebeca','cl-liquidaciones'] },
+        { name: 'Jurídico · Ações em curso', flag: '⚖️', tag: 'juridico', slots: ['confissao-alisson','procuracoes','notificacoes-extrajudiciais','processos-judiciais'] }
+      ]
+    }
+  ];
+
+  let cofreCurrentIdx = 3; // default to 2024
+  let cofreFilterTag = 'ALL';
+
+  // Estado dos slots (filled or not)
+  const SLOT_STATE = {}; // { slotId: { filled: bool, fileName: '', size: 0 } }
+
+  function getFiledStatusForSlot(slotId) {
+    return SLOT_STATE[slotId] || { filled: false };
+  }
+
   function renderEmptySlot(slot, def) {
-    slot.classList.remove('filled');
-    slot.classList.add('empty');
-    slot.innerHTML = `
-      <div class="cs-header">
-        <span class="cs-icon">${def.icon}</span>
-        <span class="cs-name">${def.name}</span>
-      </div>
-      <div class="cs-desc">${def.desc}</div>
-      ${tagsHTML(def.problems)}
-      <div class="cs-actions">
-        <span class="cs-status-empty">📥 Arraste ou clique pra subir</span>
-      </div>
-    `;
-    slot.onclick = (e) => {
-      if (e.target.classList.contains('cs-btn')) return;
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.onchange = () => handleFileUpload(slot.dataset.slot, input.files[0]);
-      input.click();
-    };
+    // backward-compat: marca estado e re-renderiza a UI nova
+    if (SLOT_STATE[slot.dataset.slot]) SLOT_STATE[slot.dataset.slot].filled = false;
+    renderCofreCurrent();
   }
 
   function renderFilledSlot(slot, def, fileData) {
-    slot.classList.remove('empty');
-    slot.classList.add('filled');
-    slot.onclick = null;
-    slot.innerHTML = `
-      <div class="cs-header">
-        <span class="cs-icon">${def.icon}</span>
-        <span class="cs-name">${def.name}</span>
-      </div>
-      <div class="cs-desc">${def.desc}</div>
-      ${tagsHTML(def.problems)}
-      <div class="cs-actions">
-        <div class="cs-file-info">✅ ${fileData.name} · ${formatSize(fileData.size)}</div>
-        <button class="cs-btn" onclick="openSlotFile('${slot.dataset.slot}')">👁️ Ver</button>
-        <button class="cs-btn" onclick="downloadSlotFile('${slot.dataset.slot}')">⬇️</button>
-        <button class="cs-btn danger" onclick="deleteSlotFile('${slot.dataset.slot}')">✕</button>
+    SLOT_STATE[slot.dataset.slot] = { filled: true, fileName: fileData.name, size: fileData.size };
+    renderCofreCurrent();
+  }
+
+  function buildSummaryHTML(catData) {
+    const totals = { total: 0, filled: 0 };
+    catData.depts.forEach(d => d.slots.forEach(s => {
+      totals.total++;
+      if (SLOT_STATE[s] && SLOT_STATE[s].filled) totals.filled++;
+    }));
+    const empty = totals.total - totals.filled;
+    return `
+      <span class="cofre-summary-pill gray">${totals.total} documentos</span>
+      <span class="cofre-summary-pill green">✓ ${totals.filled} anexados</span>
+      <span class="cofre-summary-pill orange">⏳ ${empty} aguardando</span>
+    `;
+  }
+
+  function renderCofreCurrent() {
+    const cat = COFRE_STRUCTURE[cofreCurrentIdx];
+    if (!cat) return;
+    const tlCurrent = document.getElementById('tl-current');
+    const tlPrev = document.getElementById('tl-prev');
+    const tlNext = document.getElementById('tl-next');
+    if (!tlCurrent) return;
+
+    tlCurrent.textContent = cat.label;
+    tlPrev.classList.toggle('disabled', cofreCurrentIdx === 0);
+    tlNext.classList.toggle('disabled', cofreCurrentIdx === COFRE_STRUCTURE.length - 1);
+    tlPrev.innerHTML = cofreCurrentIdx > 0 ? `← ${COFRE_STRUCTURE[cofreCurrentIdx-1].label}` : '←';
+    tlNext.innerHTML = cofreCurrentIdx < COFRE_STRUCTURE.length-1 ? `${COFRE_STRUCTURE[cofreCurrentIdx+1].label} →` : '→';
+
+    document.getElementById('cofre-summary').innerHTML = buildSummaryHTML(cat);
+
+    // contagem geral
+    const totals = { total: 0, filled: 0 };
+    cat.depts.forEach(d => d.slots.forEach(s => {
+      totals.total++;
+      if (SLOT_STATE[s] && SLOT_STATE[s].filled) totals.filled++;
+    }));
+    const badgeClass = totals.filled === totals.total && totals.total > 0 ? '' : (totals.filled > 0 ? 'partial' : 'empty');
+    const badgeText = `${totals.filled}/${totals.total} anexados`;
+
+    let html = `
+      <div class="cofre-period">
+        <span class="cofre-period-tag ${cat.tagColor}">${cat.label}</span>
+        <div class="cofre-period-header">
+          <div>
+            <div class="cofre-period-title">${cat.label === 'PERENES' ? 'Documentos Perenes' : 'Ano ' + cat.label}</div>
+            <div class="cofre-period-subtitle">${cat.subtitle}</div>
+          </div>
+          <div class="cofre-period-badge ${badgeClass}">${badgeText}</div>
+        </div>
+        <div class="cofre-dept-grid">
+    `;
+
+    cat.depts.forEach(dept => {
+      // Filtra slots por tag de problema (se filter aplicado)
+      const visibleSlots = dept.slots.filter(slotId => {
+        if (cofreFilterTag === 'ALL') return true;
+        const def = SLOT_DEFS[slotId];
+        return def && def.problems && def.problems.includes(cofreFilterTag);
+      });
+      if (visibleSlots.length === 0) return;
+
+      html += `
+        <div class="cofre-dept">
+          <span class="cofre-dept-tag ${dept.tag}">${dept.flag} ${dept.name}</span>
+          <div style="height: 10px;"></div>
+      `;
+      visibleSlots.forEach(slotId => {
+        const def = SLOT_DEFS[slotId];
+        if (!def) return;
+        const state = SLOT_STATE[slotId] || { filled: false };
+        const problemTags = (def.problems || []).map(p => `<span class="cofre-doc-tag ${p}">${p}</span>`).join('');
+        html += `
+          <div class="cofre-doc-line ${state.filled ? 'filled' : ''}" data-slot="${slotId}" data-cat="${cat.key}" title="${def.desc}">
+            <span class="cdl-icon">${def.icon}</span>
+            <div style="flex:1;">
+              <div class="cdl-name">${def.name.replace(/\s*\((BR|CL)\)$/, '')}</div>
+              ${state.filled ? `<div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">${state.fileName} · ${formatSize(state.size)}</div>` : ''}
+            </div>
+            ${problemTags ? `<div class="cofre-doc-tags">${problemTags}</div>` : ''}
+            <div class="cdl-check"></div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    });
+
+    html += `
+        </div>
       </div>
     `;
+
+    document.getElementById('cofre-period-render').innerHTML = html;
+
+    // Wire up drop+click em cada doc-line
+    document.querySelectorAll('.cofre-doc-line').forEach(line => {
+      const slotId = line.dataset.slot;
+      line.addEventListener('click', (e) => {
+        // Se já tem arquivo, abrir opções (ver/baixar/remover)
+        if (line.classList.contains('filled')) {
+          const action = prompt('Arquivo: ' + (SLOT_STATE[slotId]?.fileName || '?') + '\n\nDigite: V (ver), D (baixar), R (remover) ou ESC pra cancelar', 'V');
+          if (!action) return;
+          const a = action.trim().toUpperCase();
+          if (a === 'V') openSlotFile(slotId);
+          else if (a === 'D') downloadSlotFile(slotId);
+          else if (a === 'R') deleteSlotFile(slotId);
+        } else {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.onchange = () => handleFileUpload(slotId, input.files[0]);
+          input.click();
+        }
+      });
+      line.addEventListener('dragover', (e) => { e.preventDefault(); line.classList.add('dragover'); });
+      line.addEventListener('dragleave', () => line.classList.remove('dragover'));
+      line.addEventListener('drop', (e) => {
+        e.preventDefault();
+        line.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file) handleFileUpload(slotId, file);
+      });
+    });
+
+    // Atalhos pra outros períodos
+    const shortcuts = COFRE_STRUCTURE.map((c, i) => {
+      const isActive = i === cofreCurrentIdx;
+      return `<button onclick="jumpCofre(${i})" style="background:${isActive ? 'var(--blue)' : 'transparent'}; color:${isActive ? '#fff' : 'var(--text-muted)'}; border:1px solid ${isActive ? 'var(--blue)' : 'var(--border)'}; padding:4px 10px; border-radius:14px; cursor:pointer; font-size:11.5px; margin:0 3px; font-family:inherit; font-weight:600;">${c.label}</button>`;
+    }).join('');
+    document.getElementById('cofre-shortcuts').innerHTML = shortcuts;
+  }
+
+  function navCofre(delta) {
+    const newIdx = cofreCurrentIdx + delta;
+    if (newIdx < 0 || newIdx >= COFRE_STRUCTURE.length) return;
+    cofreCurrentIdx = newIdx;
+    renderCofreCurrent();
+  }
+  function jumpCofre(idx) {
+    cofreCurrentIdx = idx;
+    renderCofreCurrent();
   }
 
   async function handleFileUpload(slotId, file) {
@@ -4357,12 +4558,10 @@ Obrigada! 🙏</div>
       alert('Conecte a pasta do cofre primeiro (botão "🔗 Conectar pasta" no topo).');
       return;
     }
-    const def = SLOT_DEFS[slotId];
     try {
       const saved = await fsPut(slotId, file);
-      const slot = document.querySelector(`[data-slot="${slotId}"]`);
-      renderFilledSlot(slot, def, { name: saved.name, size: saved.size });
-      updateCofreProgress();
+      SLOT_STATE[slotId] = { filled: true, fileName: saved.name, size: saved.size };
+      renderCofreCurrent();
     } catch(err) {
       alert('Erro ao salvar arquivo: ' + err.message);
     }
@@ -4391,9 +4590,8 @@ Obrigada! 🙏</div>
   async function deleteSlotFile(slotId) {
     if (!confirm('Remover esse arquivo do cofre? (também remove o arquivo da pasta iCloud)')) return;
     await fsDelete(slotId);
-    const slot = document.querySelector(`[data-slot="${slotId}"]`);
-    renderEmptySlot(slot, SLOT_DEFS[slotId]);
-    updateCofreProgress();
+    SLOT_STATE[slotId] = { filled: false };
+    renderCofreCurrent();
   }
 
   function setupDropZone(slot) {
@@ -4411,37 +4609,26 @@ Obrigada! 🙏</div>
   }
 
   function updateCofreProgress() {
-    const slots = document.querySelectorAll('.cofre-slot');
-    let done = 0;
-    const cats = {};
-    slots.forEach(s => {
-      const cat = s.dataset.cat;
-      if (!cats[cat]) cats[cat] = { total: 0, done: 0 };
-      cats[cat].total++;
-      if (s.classList.contains('filled')) { cats[cat].done++; done++; }
-    });
-    const total = slots.length;
-    document.getElementById('cofre-progress-label').textContent = `${done} de ${total} documentos`;
-    document.getElementById('cofre-progress-fill').style.width = total ? Math.round((done/total)*100) + '%' : '0%';
-    Object.keys(cats).forEach(c => {
-      const el = document.querySelector(`[data-cat="${c}"].cct-count`);
-      if (el) el.textContent = `${cats[c].done}/${cats[c].total}`;
-    });
+    renderCofreCurrent();
+  }
+
+  // Reescritas: as funções abaixo trabalham via SLOT_STATE
+  async function reloadAllSlots() {
+    for (const slotId of Object.keys(SLOT_DEFS)) {
+      const existing = await fsGetFile(slotId);
+      if (existing) {
+        SLOT_STATE[slotId] = { filled: true, fileName: existing.name, size: existing.size };
+      } else {
+        SLOT_STATE[slotId] = { filled: false };
+      }
+    }
+    renderCofreCurrent();
   }
 
   async function initCofre() {
     await openHandleDB();
-    const slots = document.querySelectorAll('.cofre-slot');
-    // Setup drop zones and render empty by default
-    slots.forEach(slot => {
-      const def = SLOT_DEFS[slot.dataset.slot];
-      if (!def) return;
-      setupDropZone(slot);
-      renderEmptySlot(slot, def);
-    });
-    updateCofreProgress();
+    renderCofreCurrent();
 
-    // Try to restore previously connected folder
     const savedHandle = await loadHandle();
     if (savedHandle) {
       try {
@@ -4462,33 +4649,12 @@ Obrigada! 🙏</div>
 
   initCofre();
 
-  // Toggle de categoria do cofre
-  function toggleCategory(banner) {
-    banner.parentElement.classList.toggle('collapsed');
-  }
-
   // Filtro por tag de problema
   function filterByTag(tag, btn) {
     document.querySelectorAll('.tag-filter button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.cofre-slot').forEach(slot => {
-      const def = SLOT_DEFS[slot.dataset.slot];
-      if (!def) return;
-      if (tag === 'ALL') {
-        slot.classList.remove('hidden');
-      } else {
-        const has = def.problems && def.problems.includes(tag);
-        slot.classList.toggle('hidden', !has);
-      }
-    });
-    // Hide categories that have all slots hidden
-    document.querySelectorAll('.cofre-category').forEach(cat => {
-      const slots = cat.querySelectorAll('.cofre-slot');
-      const allHidden = Array.from(slots).every(s => s.classList.contains('hidden'));
-      cat.style.display = allHidden ? 'none' : '';
-      // Auto-expand if filtered
-      if (!allHidden && tag !== 'ALL') cat.classList.remove('collapsed');
-    });
+    cofreFilterTag = tag;
+    renderCofreCurrent();
   }
 </script>
 
