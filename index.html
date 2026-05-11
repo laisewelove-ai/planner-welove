@@ -454,12 +454,23 @@
 
       <!-- WLC -->
       <div class="panel" id="panel-wlc">
-        <div class="iframe-fill">
+        <div class="wlc-subnav" style="display:flex; gap:4px; padding:8px 16px; background:var(--bg2); border-bottom:1px solid var(--border); flex-shrink:0;">
+          <button class="wlc-subbtn active" data-sub="central"
+                  style="padding:6px 14px; border-radius:7px; border:none; background:rgba(192,83,58,.14); font-family:'Lufga',sans-serif; font-size:12.5px; font-weight:600; color:var(--accent); cursor:pointer;">
+            🏛️ Central de Inteligência
+          </button>
+          <button class="wlc-subbtn" data-sub="contabilidade"
+                  style="padding:6px 14px; border-radius:7px; border:none; background:transparent; font-family:'Lufga',sans-serif; font-size:12.5px; font-weight:600; color:var(--text2); cursor:pointer;">
+            🔒 Contabilidade
+          </button>
+        </div>
+        <div class="iframe-fill" id="wlc-iframe-wrap" style="flex:1;">
           <div class="frame-loading" id="loading-wlc">
             <div class="spinner" style="border-top-color:#CC2200"></div>
             <span class="spinner-lbl">Carregando We Love Chile…</span>
           </div>
           <iframe id="frame-wlc" title="We Love Chile — Central"></iframe>
+          <iframe id="frame-wlc-contab" title="Contabilidade WLC" style="display:none;"></iframe>
         </div>
       </div>
 
@@ -561,6 +572,36 @@
             loading.classList.add('hidden');
             setTimeout(function(){ loading.style.display='none'; },320);
           });
+        }
+      });
+    });
+
+    /* ── WLC sub-nav (Central × Contabilidade) ── */
+    var wlcContabLoaded = false;
+    document.querySelectorAll('.wlc-subbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var sub = btn.dataset.sub;
+        document.querySelectorAll('.wlc-subbtn').forEach(function(b){
+          b.classList.remove('active');
+          b.style.background = 'transparent';
+          b.style.color = 'var(--text2)';
+        });
+        btn.classList.add('active');
+        btn.style.background = 'rgba(192,83,58,.14)';
+        btn.style.color = 'var(--accent)';
+
+        var central = $('frame-wlc');
+        var contab = $('frame-wlc-contab');
+        if(sub === 'central'){
+          central.style.display = '';
+          contab.style.display = 'none';
+        } else {
+          central.style.display = 'none';
+          contab.style.display = '';
+          if(!wlcContabLoaded){
+            wlcContabLoaded = true;
+            contab.src = 'contabilidade/index.html';
+          }
         }
       });
     });
