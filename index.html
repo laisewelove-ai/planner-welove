@@ -459,6 +459,10 @@
                   style="padding:6px 14px; border-radius:7px; border:none; background:rgba(192,83,58,.14); font-family:'Lufga',sans-serif; font-size:12.5px; font-weight:600; color:var(--accent); cursor:pointer;">
             🏛️ Central de Inteligência
           </button>
+          <button class="wlc-subbtn" data-sub="arquivos"
+                  style="padding:6px 14px; border-radius:7px; border:none; background:transparent; font-family:'Lufga',sans-serif; font-size:12.5px; font-weight:600; color:var(--text2); cursor:pointer;">
+            📁 Arquivos
+          </button>
           <button class="wlc-subbtn" data-sub="contabilidade"
                   style="padding:6px 14px; border-radius:7px; border:none; background:transparent; font-family:'Lufga',sans-serif; font-size:12.5px; font-weight:600; color:var(--text2); cursor:pointer;">
             🔒 Contabilidade
@@ -470,6 +474,7 @@
             <span class="spinner-lbl">Carregando We Love Chile…</span>
           </div>
           <iframe id="frame-wlc" title="We Love Chile — Central"></iframe>
+          <iframe id="frame-wlc-arquivos" title="Arquivos WLC" style="display:none;"></iframe>
           <iframe id="frame-wlc-contab" title="Contabilidade WLC" style="display:none;"></iframe>
         </div>
       </div>
@@ -576,8 +581,8 @@
       });
     });
 
-    /* ── WLC sub-nav (Central × Contabilidade) ── */
-    var wlcContabLoaded = false;
+    /* ── WLC sub-nav (Central × Arquivos × Contabilidade) ── */
+    var wlcSubLoaded = { central: false, arquivos: false, contabilidade: false };
     document.querySelectorAll('.wlc-subbtn').forEach(function(btn){
       btn.addEventListener('click', function(){
         var sub = btn.dataset.sub;
@@ -590,18 +595,23 @@
         btn.style.background = 'rgba(192,83,58,.14)';
         btn.style.color = 'var(--accent)';
 
-        var central = $('frame-wlc');
-        var contab = $('frame-wlc-contab');
-        if(sub === 'central'){
-          central.style.display = '';
-          contab.style.display = 'none';
-        } else {
-          central.style.display = 'none';
-          contab.style.display = '';
-          if(!wlcContabLoaded){
-            wlcContabLoaded = true;
-            contab.src = 'contabilidade/index.html';
-          }
+        var frames = {
+          central: $('frame-wlc'),
+          arquivos: $('frame-wlc-arquivos'),
+          contabilidade: $('frame-wlc-contab')
+        };
+        var srcs = {
+          arquivos: 'arquivos-wlc/index.html',
+          contabilidade: 'contabilidade/index.html'
+        };
+
+        Object.keys(frames).forEach(function(k){
+          frames[k].style.display = (k === sub) ? '' : 'none';
+        });
+
+        if(sub !== 'central' && !wlcSubLoaded[sub]){
+          wlcSubLoaded[sub] = true;
+          frames[sub].src = srcs[sub];
         }
       });
     });

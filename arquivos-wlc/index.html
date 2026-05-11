@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arquivos — We Love Chile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F2ECE4;
+    --bg2: #EDE7DC;
+    --bg3: #E8E0D4;
+    --card: #F9F3E9;
+    --border: #D4C8B8;
+    --accent: #C0533A;
+    --text: #2A1A10;
+    --text2: #6A5040;
+    --text3: #A89080;
+    --green: #4A8B43;
+    --orange: #C77A0F;
+    --blue: #2E6FA8;
+    --purple: #6B5B95;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 28px 60px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+
+  /* HEADER */
+  .arq-header { text-align: center; margin-bottom: 24px; }
+  .arq-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  .arq-main-title {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+  .arq-subtitle {
+    font-size: 14px;
+    color: var(--text2);
+    margin-top: 8px;
+  }
+
+  .arq-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 22px 0 28px;
+    flex-wrap: wrap;
+    font-size: 13.5px;
+    color: var(--text2);
+  }
+  .arq-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 24px;
+    font-weight: 600;
+  }
+  .arq-pill.gray { background: rgba(168,144,128,0.18); color: var(--text2); }
+  .arq-pill.green { background: rgba(74,139,67,0.14); color: var(--green); }
+  .arq-pill.orange { background: rgba(199,122,15,0.14); color: var(--orange); }
+  .arq-pill.blue { background: rgba(46,111,168,0.14); color: var(--blue); }
+
+  /* FILTRO */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .filter-bar-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+  }
+  .filter-bar button {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 7px 16px;
+    border-radius: 22px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .filter-bar button:hover { border-color: var(--accent); color: var(--text); }
+  .filter-bar button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* ACESSO RÁPIDO (links destacados) */
+  .quick-access {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .qa-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .qa-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(42,26,16,0.1);
+    border-color: var(--accent);
+  }
+  .qa-card .qa-icon {
+    width: 64px; height: 64px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), #A04025);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+  }
+  .qa-card.contab .qa-icon { background: linear-gradient(135deg, var(--blue), #1F4F7A); }
+  .qa-card .qa-info { flex: 1; }
+  .qa-card .qa-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .qa-card .qa-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .qa-card .qa-desc {
+    font-size: 12.5px;
+    color: var(--text2);
+  }
+  .qa-card .qa-arrow {
+    font-size: 22px;
+    color: var(--text3);
+    transition: all 0.2s;
+  }
+  .qa-card:hover .qa-arrow { color: var(--accent); transform: translateX(4px); }
+
+  /* DEPARTAMENTO (container estilo "Semana") */
+  .dept-period {
+    background: var(--card);
+    border-radius: 22px;
+    padding: 28px 32px;
+    margin-bottom: 22px;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+  .dept-period-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    color: #fff;
+    position: absolute;
+    top: -14px;
+    left: 24px;
+  }
+  .dept-period-tag.comercial { background: var(--green); }
+  .dept-period-tag.marketing { background: var(--accent); }
+  .dept-period-tag.operacoes { background: var(--blue); }
+  .dept-period-tag.financeiro { background: var(--orange); }
+  .dept-period-tag.contabil { background: #6B5B95; }
+  .dept-period-tag.juridico { background: #2A2640; }
+  .dept-period-tag.tech { background: #4A8B43; }
+
+  .dept-period-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dept-period-title {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .dept-period-subtitle {
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .dept-period-badge {
+    background: rgba(74,139,67,0.14);
+    color: var(--green);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 7px 14px;
+    border-radius: 24px;
+  }
+
+  /* CARDS de subcategoria */
+  .subcat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .subcat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 22px 18px;
+    position: relative;
+  }
+  .subcat-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 5px 5px 0 0;
+    color: #fff;
+    position: absolute;
+    top: -12px;
+    left: 16px;
+    background: var(--accent);
+  }
+  .subcat-tag.green { background: var(--green); }
+  .subcat-tag.blue { background: var(--blue); }
+  .subcat-tag.orange { background: var(--orange); }
+  .subcat-tag.purple { background: var(--purple); }
+  .subcat-tag.dark { background: #2A2640; }
+
+  .subcat-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+  .subcat-subtitle {
+    font-size: 11.5px;
+    color: var(--text2);
+    margin-bottom: 14px;
+  }
+
+  .file-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: background 0.15s;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  .file-line:hover { background: rgba(192,83,58,0.06); }
+  .file-line .fl-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--bg2);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .file-line .fl-icon.pdf { background: rgba(192,83,58,0.18); color: var(--accent); }
+  .file-line .fl-icon.html { background: rgba(46,111,168,0.18); color: var(--blue); }
+  .file-line .fl-icon.doc { background: rgba(74,139,67,0.18); color: var(--green); }
+  .file-line .fl-icon.xls { background: rgba(74,139,67,0.18); color: var(--green); }
+  .file-line .fl-name {
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.4;
+    flex: 1;
+  }
+  .file-line .fl-status {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .file-line .fl-status.empty {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text3);
+  }
+
+  .file-line.hidden { display: none; }
+  .dept-period.hidden { display: none; }
+
+  @media (max-width: 720px) {
+    .quick-access { grid-template-columns: 1fr; }
+    .arq-main-title { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="arq-header">
+    <div class="arq-title">📁 Acervo Documental</div>
+    <div class="arq-main-title">Arquivos</div>
+    <div class="arq-subtitle">We Love Chile — todos os documentos da operação, organizados por departamento</div>
+  </div>
+
+  <!-- SUMÁRIO -->
+  <div class="arq-summary">
+    <span class="arq-pill gray" id="sum-total">0 arquivos</span>
+    <span class="arq-pill green" id="sum-pdf">0 PDFs</span>
+    <span class="arq-pill blue" id="sum-html">0 HTMLs</span>
+    <span class="arq-pill orange" id="sum-pending">0 pendentes</span>
+  </div>
+
+  <!-- ACESSO RÁPIDO -->
+  <div class="quick-access">
+    <a class="qa-card" href="https://wlc-central.netlify.app" target="_blank">
+      <div class="qa-icon">🏛️</div>
+      <div class="qa-info">
+        <div class="qa-label">Acesso Rápido</div>
+        <div class="qa-name">Central de Inteligência WLC</div>
+        <div class="qa-desc">Dashboard estratégico da We Love Chile</div>
+      </div>
+      <div class="qa-arrow">→</div>
+    </a>
+    <a class="qa-card contab" href="../contabilidade/" target="_blank">
+      <div class="qa-icon">💱</div>
+      <div class="qa-info">
+        <div class="qa-label">Acesso Rápido · 🔒 Confidencial</div>
+        <div class="qa-name">Central de Contabilidade</div>
+        <div class="qa-desc">Problemas fiscais, cofre de docs, estratégia BR↔CL</div>
+      </div>
+      <div class="qa-arrow">→</div>
+    </a>
+  </div>
+
+  <!-- FILTRO -->
+  <div class="filter-bar">
+    <span class="filter-bar-label">🏷️ Filtrar por tipo:</span>
+    <button class="active" data-filter="ALL" onclick="filterFiles('ALL', this)">Todos</button>
+    <button data-filter="pdf" onclick="filterFiles('pdf', this)">📕 PDF</button>
+    <button data-filter="html" onclick="filterFiles('html', this)">🌐 HTML</button>
+    <button data-filter="doc" onclick="filterFiles('doc', this)">📄 DOC</button>
+    <button data-filter="xls" onclick="filterFiles('xls', this)">📊 Planilha</button>
+  </div>
+
+  <!-- DEPARTAMENTOS -->
+  <div id="departments"></div>
+
+</div>
+
+<script>
+  // Estrutura de departamentos e arquivos
+  const DEPARTMENTS = [
+    {
+      key: 'comercial',
+      tag: 'comercial',
+      name: 'Comercial',
+      subtitle: 'Vendas, parcerias, contratos com clientes',
+      subcats: [
+        {
+          name: 'Contratos com Clientes',
+          tag: 'green',
+          subtitle: 'Modelos e contratos ativos',
+          files: [
+            { name: 'Contrato padrão · Cliente PF', type: 'pdf', url: '#', filled: false },
+            { name: 'Contrato padrão · Cliente PJ', type: 'pdf', url: '#', filled: false },
+            { name: 'Termos de cancelamento', type: 'html', url: '#', filled: false }
+          ]
+        },
+        {
+          name: 'Parcerias',
+          tag: 'blue',
+          subtitle: 'Hotéis, operadores, agências',
+          files: [
+            { name: 'Contrato top 10 hotéis Atacama', type: 'pdf', url: '#', filled: false },
+            { name: 'Acordo guias locais Santiago', type: 'pdf', url: '#', filled: false }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'marketing',
+      tag: 'marketing',
+      name: 'Marketing',
+      subtitle: 'Conteúdo, redes, branding, materiais públicos',
+      subcats: [
+        {
+          name: 'Brandbook',
+          tag: 'orange',
+          subtitle: 'Identidade visual',
+          files: [
+            { name: 'Brandbook WLC v2026', type: 'pdf', url: '#', filled: false },
+            { name: 'Manual de tom de voz', type: 'html', url: '#', filled: false }
+          ]
+        },
+        {
+          name: 'Site Público',
+          tag: 'blue',
+          subtitle: 'welovechile.com.br',
+          files: [
+            { name: 'Termos de Uso do site', type: 'html', url: '#', filled: false },
+            { name: 'Política de Privacidade · LGPD', type: 'html', url: '#', filled: false }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'operacoes',
+      tag: 'operacoes',
+      name: 'Operações',
+      subtitle: 'Receptiva, roteiros, fornecedores em campo',
+      subcats: [
+        {
+          name: 'Roteiros Atacama',
+          tag: 'green',
+          subtitle: 'Itinerários e combos',
+          files: [
+            { name: 'Combo 4 dias Atacama PDF', type: 'pdf', url: '#', filled: false },
+            { name: 'Combo Patagônia clássico', type: 'pdf', url: '#', filled: false }
+          ]
+        },
+        {
+          name: 'Roteiros Santiago',
+          tag: 'green',
+          subtitle: 'Day tours e estadias',
+          files: [
+            { name: 'Roteiro Santiago 3 dias', type: 'pdf', url: '#', filled: false }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'financeiro',
+      tag: 'financeiro',
+      name: 'Financeiro',
+      subtitle: 'Receitas, custos, caixa, projeções',
+      subcats: [
+        {
+          name: 'Demonstrativos',
+          tag: 'orange',
+          subtitle: 'DRE, Balanço, Cash Flow',
+          files: [
+            { name: 'DRE 2024 (BR)', type: 'pdf', url: '#', filled: false },
+            { name: 'Balanço 2024 (BR)', type: 'pdf', url: '#', filled: false },
+            { name: 'Cash Flow Q1 2026', type: 'xls', url: '#', filled: false }
+          ]
+        },
+        {
+          name: 'Receitas',
+          tag: 'green',
+          subtitle: 'Faturamento por canal',
+          files: [
+            { name: 'Faturamento mensal 2025', type: 'xls', url: '#', filled: false }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'contabil',
+      tag: 'contabil',
+      name: 'Contábil e Fiscal',
+      subtitle: 'Documentos contábeis, declarações, certidões',
+      subcats: [
+        {
+          name: 'Constituição',
+          tag: 'purple',
+          subtitle: 'CNPJ, RUT, contrato social',
+          files: [
+            { name: 'Contrato Social WLC Brasil', type: 'pdf', url: '#', filled: false },
+            { name: 'Escritura WLC Chile', type: 'pdf', url: '../contabilidade/cofre/cl-escritura-constitucion.pdf', filled: true }
+          ]
+        },
+        {
+          name: 'Declarações e Certidões',
+          tag: 'orange',
+          subtitle: 'IRPF, CND, F22',
+          files: [
+            { name: 'PGFN #13462844 Previdenciário', type: 'pdf', url: '../contabilidade/cofre/br-pgfn-13462844.pdf', filled: true },
+            { name: 'PGFN #13462845 Outros', type: 'pdf', url: '../contabilidade/cofre/br-pgfn-13462845.pdf', filled: true }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'juridico',
+      tag: 'juridico',
+      name: 'Jurídico',
+      subtitle: 'Contratos internos, processos, confissões',
+      subcats: [
+        {
+          name: 'Ações em Curso',
+          tag: 'dark',
+          subtitle: 'Processos e confissões ativas',
+          files: [
+            { name: 'Confissão de Dívida Alisson', type: 'pdf', url: '../contabilidade/cofre/confissao-alisson.pdf', filled: true }
+          ]
+        },
+        {
+          name: 'Contratos Internos',
+          tag: 'blue',
+          subtitle: 'Trabalho, prestação de serviço',
+          files: [
+            { name: 'Modelo CLT BR', type: 'pdf', url: '#', filled: false },
+            { name: 'Modelo Contrato Chile', type: 'pdf', url: '#', filled: false }
+          ]
+        }
+      ]
+    },
+    {
+      key: 'tech',
+      tag: 'tech',
+      name: 'Tecnologia',
+      subtitle: 'Sites, sistemas, dashboards',
+      subcats: [
+        {
+          name: 'Dashboards Internos',
+          tag: 'blue',
+          subtitle: 'HTMLs operacionais',
+          files: [
+            { name: 'Central WLC', type: 'html', url: 'https://wlc-central.netlify.app', filled: true },
+            { name: 'Sistema 1×10', type: 'html', url: 'https://sistema1x10.netlify.app', filled: true },
+            { name: 'Central de Contabilidade', type: 'html', url: '../contabilidade/', filled: true }
+          ]
+        }
+      ]
+    }
+  ];
+
+  let currentFilter = 'ALL';
+
+  function renderDepartments() {
+    const root = document.getElementById('departments');
+    let html = '';
+    let totals = { pdf: 0, html: 0, doc: 0, xls: 0, filled: 0, total: 0 };
+
+    DEPARTMENTS.forEach(dept => {
+      let deptFiles = 0;
+      let deptFilled = 0;
+      let subcatsHtml = '';
+
+      dept.subcats.forEach(sub => {
+        const filteredFiles = sub.files.filter(f => currentFilter === 'ALL' || f.type === currentFilter);
+        if (filteredFiles.length === 0) return;
+
+        let filesHtml = '';
+        filteredFiles.forEach(file => {
+          totals.total++;
+          totals[file.type] = (totals[file.type] || 0) + 1;
+          if (file.filled) totals.filled++;
+          deptFiles++;
+          if (file.filled) deptFilled++;
+          const typeIcon = { pdf: 'PDF', html: 'HTM', doc: 'DOC', xls: 'XLS' }[file.type] || '?';
+          const target = file.url.startsWith('http') ? '_blank' : (file.url === '#' ? '' : '_blank');
+          const onclick = file.url === '#' ? `return false;` : '';
+          filesHtml += `
+            <a class="file-line" href="${file.url}" target="${target}" onclick="${onclick}">
+              <span class="fl-icon ${file.type}">${typeIcon}</span>
+              <span class="fl-name">${file.name}</span>
+              <span class="fl-status ${file.filled ? '' : 'empty'}">${file.filled ? '✓' : ''}</span>
+            </a>
+          `;
+        });
+
+        subcatsHtml += `
+          <div class="subcat-card">
+            <span class="subcat-tag ${sub.tag}">${sub.name}</span>
+            <div class="subcat-title">${sub.name}</div>
+            <div class="subcat-subtitle">${sub.subtitle}</div>
+            ${filesHtml}
+          </div>
+        `;
+      });
+
+      if (subcatsHtml === '') return;
+
+      const badgeClass = deptFilled === deptFiles && deptFiles > 0 ? '' : 'partial';
+      html += `
+        <div class="dept-period">
+          <span class="dept-period-tag ${dept.tag}">${dept.name}</span>
+          <div class="dept-period-header">
+            <div>
+              <div class="dept-period-title">${dept.name}</div>
+              <div class="dept-period-subtitle">${dept.subtitle}</div>
+            </div>
+            <div class="dept-period-badge">${deptFilled}/${deptFiles} arquivos</div>
+          </div>
+          <div class="subcat-grid">
+            ${subcatsHtml}
+          </div>
+        </div>
+      `;
+    });
+
+    root.innerHTML = html;
+
+    document.getElementById('sum-total').textContent = `${totals.total} arquivos`;
+    document.getElementById('sum-pdf').textContent = `📕 ${totals.pdf} PDFs`;
+    document.getElementById('sum-html').textContent = `🌐 ${totals.html} HTMLs`;
+    document.getElementById('sum-pending').textContent = `⏳ ${totals.total - totals.filled} pendentes`;
+  }
+
+  function filterFiles(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderDepartments();
+  }
+
+  renderDepartments();
+</script>
+
+</body>
+</html>
